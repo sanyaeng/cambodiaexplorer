@@ -1,0 +1,287 @@
+<link rel="stylesheet" href="/static/css/main.css"/>
+<div id="businessbody">
+	<div id="header" class="header inf_header">Business Information</div>
+	<div id="menubar" class="menubar">
+		<!-- CRUD menu here -->
+		<div class="menu_container">
+			<div id="create" class="menu_item"><img src="static/css/img/create.png" onclick="loadNewBusiness();"/></div>
+			<div id="update" class="menu_item"><img src="static/css/img/update.png" onclick="loadUpdate();"/></div>
+			<div id="update" class="menu_item"><img src="static/css/img/detail.png" onclick="loadDetail();"/></div>
+			<div id="delete" class="menu_item" style="float:right;"><img src="static/css/img/delete_bin.png"/></div>
+		</div>
+	</div>
+	<div id="navWrapper"></div>
+</div>
+<div class="map" id="map" style="height: 900px;">
+	<div id="header" class="header map_header">Business Location</div>
+	<div style="width:100%;height:100%;">
+		<div class="mapcanvas" id="mapcanvas" style="width:100%; height:100%"></div>
+	</div>
+	<div id="details_container" class="detailscontainer">
+		<div id="detailScroller">
+			<!-- <div id="details" class="details"></div> -->
+		</div>
+	</div>
+</div>
+<!-- In-line script. Should it be move to static file??? -->
+<script type="text/javascript" src="/static/js/utils/business.js"></script>
+<!-- <script type="text/javascript" src="/static/js/utils/items.js"></script> -->
+<script type="text/javascript" src="/static/js/utils/collection.js"></script>
+<script type="text/javascript" src="/static/js/infobubble.js"></script>
+<script type="text/javascript" src="/static/js/utils/map.js"></script>
+<script type="text/javascript" src="/static/js/utils/location.js"></script>
+<script type="text/javascript" src="/static/js/main.js"></script>
+<script type="text/javascript" src="/static/js/logout.js"></script>
+<script type="text/javascript" src="/static/js/jquery.ui.effect-slide.js"></script>
+<script type="text/javascript" src="/static/js/jquery.iframe-post-form.js"></script>
+<script type="text/javascript">
+var scrollContent,
+    scrollNav,
+    businessObj,
+    gmap,
+    detailScroll;
+var detailLoaded = false;
+    
+document.body.addEventListener("click", function(e) {
+	if("update" != e.target.parentNode.id && "businessview" != e.target.parentNode.className && "listing_parent" != e.target.parentNode.className) {
+		//close all popup and slide element
+		if($("#details_container").is(":visible")) {
+			$(".item_selected").removeClass("item_selected");
+			$("#details_container").toggle("drop", {direction: "down"}, 200, function(){
+				$(this).css("height", "130px");
+				resetDetail();
+			});
+		}
+		detailLoaded = false;
+		gmap.hideBubble();
+	}
+});
+
+function resetDetail() {
+	var top = $(window).height() - ($("#details_container").height() + $(".footer").height() + 5);
+	console.log(top);
+	$("#details_container").css({
+		"top": top + "px",
+		"width": $("#map").width() - 20 + "px",
+	});
+}
+
+/**
+ * onload
+ */
+$(function() {
+	businessObj = new Business();
+	//call the navigation .location
+	navigator.geolocation.getCurrentPosition(updLocation, updFailed, {enableHighAccuracy: true});
+	//retreive the business listing. if the user doesn't hav any listing, load the new business page into the navWrapper
+	businessObj.getAllBusiness(loadBusiness);
+	//display the user's login name on the footer
+	user.getUserLogin(function(userLogin){
+		sessionStorage.setItem("user", JSON.stringify(userLogin));
+		$("#logged_user").text(userLogin.displayName);
+	});
+	setTimeout(function() {
+		resetDetail();
+	}, 1500);
+	
+	$(".menu_item").live("mouseover", function(){
+		
+	});
+
+});
+
+/**
+ * Test if the device support touch event
+ */
+function isTouchDevice() {
+	return true;
+}
+/**
+ * @param: scrollingWrapper object
+ */
+function getAvailableScrollingHeight(navigationWrapper) {
+	var availableHeight = $(window).height() - $("#header").height() - $(".bar").height();
+	var top = $("#header").offset().top + $("#header").height();
+	if($("#menubar").is(":visible")) {
+		availableHeight = availableHeight - $("#menubar").height();
+		top = $("#menubar").offset().top + $("#menubar").height();
+	}
+	navigationWrapper.css({"height": availableHeight + "px", "top": top});
+}
+/**
+ * If the listing provided, but listing page will be loaded, otherwise the newbusiness will be load.
+ * The map and scrolling will remain in the same height
+ */
+function loadBusiness(listing) {
+	if(listing != undefined && listing.length > 0) {
+		//load the business listing page and re-organize the view
+		loadListing(listing);
+	}
+	else {
+		//load the new business page
+		loadNewBusiness();
+	}
+}
+
+/**
+ * Load the new business page
+ * If the businessId is provided, it will consider as the update
+ */
+function loadNewBusiness(businessId) {
+	if(scrollNav != undefined) {
+		scrollNav.destroy();
+	}
+	var item;
+	if(businessId != undefined) {
+		var b = $("#item"+businessId).data("business");
+		loadNewBusinessPage(b);
+	}
+	else {
+		loadNewBusinessPage();
+	}
+}
+
+/**
+ * Load the business page
+ */
+function loadNewBusinessPage(businessItem) {
+	$("#navWrapper").load("/static/newbusiness.html", function(){
+		$("#menubar").hide();
+		//new business loading complete here
+		setTimeout(function(){
+			//manage styles of new business
+			if($("#businesstype option").length <= 1) {
+				businessObj.getAllBusinessCategories(function(categories){
+					$.map(categories, function(i){
+						$("#businesstype").append("<option value='"+ i.id+"'>" + i.catDesc + "</option>");
+					});
+				});
+			}
+			
+			$('#upload_logo').iframePostForm({
+				json : true,
+				complete : function (response){
+					$('#logoImageUrl').val(response.accessUrl);
+					$('#logo_thumnail').html('<img width="100px" height="100px" src="'+response.accessUrl+'" /'+'>');
+				}
+			});
+			document.getElementById("file_upload").addEventListener("change", function(){
+				uploadImage();
+			}, false);
+			getAvailableScrollingHeight($("#navWrapper"));
+			if(isTouchDevice()){
+				scrollNav = new iScroll('navWrapper');
+			}
+			if(businessItem != undefined) {
+				//Start to arrange item in its possition
+				arrangBusinessItem(businessItem);
+			}
+		}, 200);
+		navigator.geolocation.getCurrentPosition(updLocation, failRefreshMap, {enableHighAccuracy: true});
+		//gmap.refresh();
+	});
+}
+
+/**
+ * Load the listing page
+ */
+function loadListing(listing) {
+	if(scrollNav != undefined) {
+		scrollNav.destroy();
+	}
+	$("#navWrapper").load("/static/listing.html", function(){
+		//load complete start here
+		setTimeout(function() {
+			$("#menubar").show();
+			//
+			getAvailableScrollingHeight($("#navWrapper"));
+			arrangeBusinessListing(listing);
+			setTimeout(function(){
+				$("#menubar").css({
+					"width": $("#business_left").width() + "px",
+				});
+			}, 150);
+			if(isTouchDevice()){
+				scrollNav = new iScroll('navWrapper');
+			}
+		}, 200);
+	});
+}
+
+/**
+ * Load the update screen.
+ * If there no any selected element, alert a lovely message to the user to select an element to be updated
+ */
+function loadUpdate() {
+	console.log($("#details_container").length);
+	if(!$("#details_container").is(":visible")) {
+		alert("Please select an item to update!!!!");
+	}
+	else {
+		//reset the map to
+		navigator.geolocation.getCurrentPosition(refreshMapPosition, failRefreshMap, {enableHighAccuracy: true});
+		
+		loadNewBusiness($("#buzId").val());
+		//animate the detail container to be a bigger size //should be animate detail view
+		/*
+		$("#details_container").animate({
+			top: $("#navWrapper").offset().top,
+			bottom: 0,
+			height: $("#navWrapper").height() -5 + "px" //make available space at the bottom of the container 5px
+		});*/
+	}
+}
+
+function loadDetail() {
+	if(!$("#details_container").is(":visible")) {
+		alert("Please select an item to update!!!!");
+	}
+	else {
+		
+		$("#details_container").animate({
+			top: $("#navWrapper").offset().top,
+			bottom: 0,
+			height: $("#navWrapper").height() -5 + "px" //make available space at the bottom of the container 5px
+		}, pushDetailBlock);
+	}
+}
+
+function pushDetailBlock() {
+	var id = $("#details_container").data("buzId");
+	if(!detailLoaded) {
+		$("#details_container").children().append("<div id='contact_details' class='details' style='display:none;'><div id='contacts' data-target='contacts' style='width:98%;height:auto'><img id='ajaxloader' src='static/css/img/ajax_loader.gif'/></div></div>");
+		$("#contact_details").effect("slide", {direction: "right"}, 100);
+	}
+	businessObj.getDetail(id, function(detail) {
+		if(detail != undefined) {
+			//check if specific details are available then add to its block. otherwise push link to add the specific detail
+			
+		}
+		else {
+			//push a link for user to add the details
+			$("#ajaxloader").hide();
+			$("#details_container").children().children().each(function(){
+				//get the detail target
+				var target = $(this).data("target");
+				var link = $("<a onclick='business.addDetail(\""+ target +"\")'> Add "+ target + "</a>");
+				$(this).append(link);
+			});
+		}
+		detailScroll.refresh();
+	});
+	detailLoaded = true;
+}
+function refreshMapPosition(p) {
+	currentLat = p.coords.latitude;
+	currentLon = p.coords.longitude;
+	var newLocation = new Location(currentLat, currentLon);
+	setTimeout(function(){
+		gmap.refresh(newLocation);
+	}, 200);
+}
+
+function failRefreshMap() {
+	var newLocation = new Location(currentLat, currentLon);
+	gmap.refresh(newLocation);
+}
+</script>

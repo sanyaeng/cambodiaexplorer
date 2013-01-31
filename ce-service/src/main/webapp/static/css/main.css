@@ -1,0 +1,98 @@
+html{
+	margin: 0;padding:0;
+}
+body{
+	/*background: url('img/bg-pattern.jpg');*/
+	-webkit-user-select:none;
+    -webkit-text-size-adjust:none;
+    margin:0;
+    overflow: hidden;
+}
+
+.savebutton{
+	background: url('img/grey_button_on.png');	
+	background-repeat:no-repeat;
+	width: 90px;
+	height:32px;
+	line-height:32px;
+	border:none;
+	color:#ffffff;
+}
+
+#usernamebox{
+	
+}
+
+#passworbox{
+	
+}
+
+div.user_footer {
+	font-size: 15px;
+	height: 26px;
+	width: 100px;
+	margin-left: 20px;
+	border: 1px solid #899CAA;
+	border-radius: 3px;
+	margin-top: 6px;
+	line-height: 26px;
+	text-align: center;
+	box-shadow: 0 0 1px 0px #000000;
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	border-top: 1px solid #838A9A;
+	box-shadow: 0 0 14px 0px #000;
+}
+
+.bar {
+	height: 40px;
+	line-height: 40px;
+	width: 100%;
+	background: #424242;
+	background-image: -webkit-gradient(linear, 0 0, 0 100, from(#F4F5F7), to(#999DA9));
+	background-image:-moz-linear-gradient(top, #f4f5f7, #999da9);
+	background-image:-o-linear-gradient(top, #f4f5f7, #999da9);
+}
+
+.logout {
+	width: 200px;
+	height: 130px;
+	position: absolute;
+	bottom: 40px;
+	background: #424242;
+	margin-left: 20px;
+	border-radius: 3px;
+	box-shadow: 0 0 6px 3px #000;
+	background-image: -webkit-gradient(linear, 0 0, 0 100, from(#F4F5F7), to(#999DA9));
+	background-image:-moz-linear-gradient(top, #f4f5f7, #999da9);
+	background-image:-o-linear-gradient(top, #f4f5f7, #999da9);
+	display:none;
+}
+
+.userbutton a, .userbutton a:hover, .userbutton a:VISITED {
+	text-decoration: none;
+}
+
+.logout .logoutwrapper .edituser {
+	margin-top:20px;
+}
+.logout .logoutwrapper {
+	margin:20px;
+}
+.logout .logoutwrapper .userbutton{
+	height: 30px;
+	width: 160px;
+	border-radius: 3px;
+	text-align: center;
+	line-height: 30px;
+	border: 1px solid #838A9A;
+	box-shadow: 1px 2px 3px 0px #000;
+	cursor: pointer;
+}
+
+.menu_item {
+	float:left;
+}

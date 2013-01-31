@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:security="http://www.springframework.org/schema/security"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+	
+    <!-- None security check pattern -->
+	<http pattern="/_ah/**" security="none" xmlns="http://www.springframework.org/schema/security"/>
+    <http pattern="/js/**" security="none" xmlns="http://www.springframework.org/schema/security"/>
+    <http pattern="/css/**" security="none" xmlns="http://www.springframework.org/schema/security"/>
+    <http pattern="/static/**.html" security="none" xmlns="http://www.springframework.org/schema/security"/>
+    
+	<http pattern="/admin/adminform.html" security="none" xmlns="http://www.springframework.org/schema/security"/>
+	<http pattern="/user/login.html" security="none" xmlns="http://www.springframework.org/schema/security"/>
+	<http pattern="/user/loginfailed.html" security="none" xmlns="http://www.springframework.org/schema/security"/>
+	<http pattern="/user/api/addNew" security="none" xmlns="http://www.springframework.org/schema/security"/>
+	<http pattern="/blob/api/**" security="none" xmlns="http://www.springframework.org/schema/security"/>
+	<http pattern="/favicon.ico" security="none" xmlns="http://www.springframework.org/schema/security"/> 
+	<!-- End of none security -->
+	
+	<http auto-config="true" xmlns="http://www.springframework.org/schema/security">
+		<http-basic/>
+		<anonymous enabled="false"/>
+		<intercept-url pattern="/business/allCategories" access="ROLE_ADMIN, ROLE_USER"/>
+		<intercept-url pattern="/api/**" access="ROLE_ADMIN, ROLE_USER"/>
+		<!-- 
+		<intercept-url pattern="/**/api/getAllBusiness" access="ROLE_ADMIN, ROLE_USER"/>
+		<intercept-url pattern="/**/api/*" access="ROLE_ADMIN, ROLE_USER"/>
+		 -->
+		<intercept-url pattern="/admin/adminform.html" access="ROLE_ADMIN" />
+		<form-login login-page="/user/login.html" default-target-url="/" authentication-failure-url="/user/loginfailed.html" />
+		<logout logout-success-url="/user/logout.html" />
+		<intercept-url pattern="/**" access="ROLE_USER" />
+	</http>
+ 
+	<authentication-manager alias="authenticationManager" xmlns="http://www.springframework.org/schema/security">
+		<authentication-provider user-service-ref="userDetailsService">
+		    <password-encoder ref="passwordEncoder" />
+		    <!-- 
+			<user-service>
+				<user name="administrator" password="123456" authorities="ROLE_ADMIN" />
+			</user-service>
+			-->
+		</authentication-provider>
+	</authentication-manager>
+	<import resource="classpath:/spring-dao.xml" />
+	<bean id="userDetailsService" class="com.ce.service.security.CeUserDetailsService">
+	    <property name="userDao" ref="userDao"/>
+	    <property name="passwordEncoder" ref="passwordEncoder" />
+	</bean>
+	
+	<bean id="passwordEncoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder">
+        <constructor-arg name="secret" value="cambodia"/>
+    </bean>
+	
+<!-- 	
+	<authentication-manager alias="authenticationManager">
+	    <authentication-provider ref="authenticationProvider"/>
+	</authentication-manager>
+	
+	<bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+	    <property name="userDetailsService" ref="userDetailsService"/>
+	</bean>
+-->
+<!-- 
+	<bean id="basicAuthenticationFilter"
+          class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authenticationEntryPoint" ref="authenticationEntryPoint"/>
+    </bean>
+
+    <bean id="authenticationEntryPoint"
+          class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
+        <property name="realmName" value="Cambodia Explorer Security"/>
+    </bean>
+    -->
+</beans>

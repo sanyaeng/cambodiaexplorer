@@ -1,0 +1,62 @@
+.left_col {
+	width:49%;
+	float:left;
+	padding-top:10px;
+}
+.right_col {
+	width:49%;
+	float:right;
+	padding-top:10px;
+}
+.left_col label, .right_col label,input,select,textarea {
+	display: block;
+	margin-bottom:5px;
+	border-radius: 5px;
+}
+
+textarea {
+	background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(255,255,255)), to(rgb(255,255,255)));
+	background:-moz-linear-gradient(80% 20% 0deg, #FFFFFF, #FFFFFF 10%);
+	border: 1px solid #899CAA;
+}
+
+.left_col input, .right_col input,.left_col select, .right_col select{
+	margin-bottom:15px;
+	/*font-size:16px;*/
+	border-radius:5px;
+	border: 1px solid #899CAA;
+	background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(255,255,255)), to(rgb(255,255,255)));
+	background:-moz-linear-gradient(80% 20% 0deg, #FFFFFF, #FFFFFF 10%);
+}
+
+.left_col input[type=text] {
+	width: 350px;
+	height: 35px;	
+}
+
+.right_col textarea{
+	width:98%;
+	display: block;
+	margin-bottom:5px;
+}
+
+td, th {
+	border: thin solid #bbbbbb;
+}
+
+td {
+	height: 35px;
+}
+th {
+	height: 25px;
+	background: #ff9700;
+}
+tr {
+	cursor: pointer;
+}
+.rowOver {
+	background: #FFF100;
+}
+.rowOut {
+	background: #ffffff;
+}

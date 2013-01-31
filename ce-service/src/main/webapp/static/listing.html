@@ -1,0 +1,65 @@
+<div id="business_left">
+	<div id="menubar"></div>
+	<div id="businesslisting">
+		<div id="userbusiness"></div>
+	</div>
+</div>
+
+<link rel="stylesheet" href="/static/css/businesslisting.css"/>
+<script type="text/javascript">
+	var locationList = new Array();
+	function placeAllMarkers() {
+		gmap.placeAllMarkers(locationList);
+	}
+	function arrangeBusinessListing(jBusinessList) {
+		$.map(jBusinessList, function(jBusiness, i){
+			console.log(jBusiness);
+			var category = jBusiness.category;
+			$("<div class='listing_parent' rel='"+ jBusiness.businessId +"' id='item"+jBusiness.businessId+"'>").append($("<div class='businessview'>").append("<div class='name'><span>"+parseInt(i+1)+". </span>"+jBusiness.businessName+"</div>")
+											 							.append("<div class='category'>"+category.catDesc+"</div>")
+											 							.append("<div class='address'>" + jBusiness.businessAddress+"</div>"))
+											 .appendTo($("#userbusiness"));
+			
+			$("#item"+jBusiness.businessId).data("business", jBusiness);
+			//drop map markers
+			var location = new Location(jBusiness.businessLat, jBusiness.businessLon);
+			location.setLocationTye(trim(category.catDesc));
+			var info = '<div class="phoneytext"><div class="name"><span id="index">'+ parseInt(i+1)+'. </span>' +jBusiness.businessName + '</div><div class="address">' +jBusiness.businessAddress +'</div></div>';
+			location.setLocationInfo(info);
+			location.setItemIndex(jBusiness.businessId);
+			locationList.push(location);
+		});
+		//place all markers
+		setTimeout(function(){
+			gmap.placeAllMarkers(locationList);
+		}, 500);
+		
+		$(".listing_parent").live("click", function(){
+			$(".item_selected").removeClass("item_selected");
+			var clone = $(this).children().clone();
+			$(this).addClass("item_selected");
+			showDetails(clone, $(this).attr("rel"));
+			gmap.showBubble($(this).attr("rel"));
+		});
+	}
+	
+	function showDetails(clonedElement, id) {
+		//var clonedElement = clonedElement.append("<input type='hidden' value='"+ id + "' id=\'buzId\'/>");
+		$("#details_container").data("buzId", id);
+		if($("#details_container").is(":visible")) {
+			$("#details_container").children().children().children().hide();
+			$("#details_container").children().children(":first").html(clonedElement);
+			$("#details_container").children().children().children().effect("slide", {direction: "right"}, 200);
+		}
+		else {
+			$("#details_container").toggle("drop", {direction: "down"}, 100,function(){
+				var details = $("<div class='details'>").append(clonedElement);
+				$(this).children().html("");
+				$(this).children().append(details);
+			});
+		}
+		
+		//
+		detailScroll = new iScroll("details_container");
+	}
+</script>

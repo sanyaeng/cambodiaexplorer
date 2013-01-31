@@ -1,0 +1,28 @@
+<style>
+	.footer {
+		display:none;
+	}
+</style>
+<!-- Login Starts Here -->
+<div id="loginContainer">
+    <a href="#" id="loginButton"><span>Login</span><em></em></a>
+    <div style="clear:both"></div>
+    <div id="loginBox">                
+        <form name='f' action='api/j_spring_security_check' method='POST' id="loginForm">
+            <fieldset id="body">
+                <fieldset>
+                    <label for="email">User:</label>
+                    <input maxLength='30' type='text' name='j_username' value=''>
+                </fieldset>
+                <fieldset>
+                    <label for="password">Password</label>
+                    <input maxLength='30' type='password' name='j_password' />
+                </fieldset>
+                <input type="submit" id="login" value="Sign in" />
+                <label for="checkbox"><input type="checkbox" id="checkbox" />Remember me</label>
+            </fieldset>
+            <span><a href="#">Forgot your password?</a></span>
+        </form>
+    </div>
+</div>
+        <!-- Login Ends Here -->

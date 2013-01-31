@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-2.5.xsd">
+	
+	<bean id="entities" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry key="category" value-ref="category"></entry>
+			</map>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="category" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<bean id="cat1" class="java.util.HashMap">
+					<constructor-arg>
+						<map>
+							<entry key="catKey" value="taxice"/>
+							<entry key="catDesc" value="Taxi"/>
+						</map>
+					</constructor-arg>
+				</bean>
+				<bean id="cat2" class="java.util.HashMap">
+					<constructor-arg>
+						<map>
+							<entry key="catKey" value="restauce"/>
+							<entry key="catDesc" value="Restaurant"/>
+						</map>
+					</constructor-arg>
+				</bean>
+				<bean id="cat3" class="java.util.HashMap">
+					<constructor-arg>
+						<map>
+							<entry key="catKey" value="nightclubce"/>
+							<entry key="catDesc" value="Night Club"/>
+						</map>
+					</constructor-arg>
+				</bean>
+			</list>
+			
+		</constructor-arg>
+	</bean>
+</beans>

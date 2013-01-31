@@ -1,0 +1,259 @@
+<div id="business_left">
+	<fieldset>
+		<label>Business Category</label>
+		<select id="businesstype" name="businesstype">
+			<option value="-1">Select business type</option>
+		</select>
+	</fieldset>
+	<hr/>
+	<fieldset>
+		<form id="upload_logo" action="" method="POST" enctype="multipart/form-data" style="float:left;">
+			<label>Business Logo</label>
+			<input type="hidden" id="logoImageUrl" /> <!-- used for storing the logo url -->
+			<div class="savebutton">
+				<span>Add Logo</span>
+				<input type="file" name="file_upload" id="file_upload">
+			</div>
+		</form>
+		<div id="logo_thumnail" style="width:100px;height:100px;float:right;border:1px inset;"></div>
+	</fieldset>
+	<hr/>
+	<fieldset>
+		<label>Business Name</label>
+		<input type="text" id="businessname" name="business" value=""/>
+	</fieldset>
+	<hr/>
+	<fieldset>
+		<label>Business Description</label>
+		<textarea id="businessDescription" name="businessDescription" rows="11" cols="35"></textarea>
+	</fieldset>
+	<hr/>
+	<fieldset>
+		<label>Business Address</label>
+		<input type="text" name="businessaddress" id="businessaddress" class="businessaddress"/>
+	</fieldset>
+	<hr/>
+	<fieldset id="comoptionholder">
+		<span>Contacts</span><span id="open_contact" style="float:right" onclick="showContactBox();">Open</span>
+	</fieldset>
+	<hr id="contact_holder"/>
+	<fieldset id="comoptionholder">
+		<span>Open Hours</span><span id="open" style="float:right" onclick="showbox();">Open</span>
+	</fieldset>
+	<hr id="openhour_holder"/>
+	<fieldset>
+		<label>Latitude</label>
+		<input type="text" id="lat" class="lat" value="" name="lat"/>
+	</fieldset>
+	<hr/>
+	<fieldset>
+		<label>Lontitude</label>
+		<input type="text" id="lon" class="lon" value="" name="lon"/>
+	</fieldset>
+	<hr/>
+	<fieldset>
+		<button onclick="addNewBusiness();" class="savebutton">Save</button>
+		<button onclick="cancel();" class="savebutton">Cancel</button>
+	</fieldset>
+</div>
+<div id="openhours" class="openhours" style="">
+	<fieldset>
+		<input type="checkbox" id="monday"/> <label>Monday</label>
+		<input type="text" id="monday_time" value=""/>
+	</fieldset>
+	<fieldset>
+		<input type="checkbox" id="tuesday"/> <label>Tuesday</label>
+		<input type="text" id="tuesday_time" value=""/>
+	</fieldset>
+	<fieldset>
+		<input type="checkbox" id="wednesday"/> <label>Wednesday</label>
+		<input type="text" id="wednes_time" value=""/>
+	</fieldset>
+	<fieldset>
+		<input type="checkbox" id="thursday"/> <label>Thursday</label>
+		<input type="text" id="thursday_time" value=""/>
+	</fieldset>
+	<fieldset>
+		<input type="checkbox" id="friday"/> <label>friday</label>
+		<input type="text" id="friday_time" value=""/>
+	</fieldset>
+	<fieldset>
+		<input type="checkbox" id="saturday"/> <label>Saturday</label>
+		<input type="text" id="saturday_time" value=""/>
+	</fieldset>
+	<fieldset>
+		<input type="checkbox" id="sunday"/> <label>Sunday</label>
+		<input type="text" id="sunday_time" value=""/>
+	</fieldset>
+</div>
+<div id="contacts" class="contacts" style="">
+	<fieldset>
+		<input type="checkbox" id="chb_website"/> <label>Website</label>
+		<input type="text" id="website" value=""/>
+	</fieldset>
+	<fieldset>
+		<input type="checkbox" id="chb_email"/> <label>E-mail</label>
+		<input type="text" id="email" value=""/>
+	</fieldset>
+	<fieldset>
+		<input type="checkbox" id="chb_main_phone"/> <label>Main Phone</label>
+		<input type="text" id="main_phone" value=""/>
+	</fieldset>
+</div>
+<link rel="stylesheet" href="/static/css/newbusiness.css"/>
+<script type="text/javascript">
+	function uploadImage() {
+		$.ajax({
+			url: "http://"+location.host + "/blob/api/upload",
+			type: "GET",
+			dataType: "json",
+			accept: "*",
+			success: function(jUpload) {
+				var uploadUrl = jUpload.uploadUrl.replace("GGPP", "localhost"); 
+				console.log(uploadUrl);
+				$("#upload_logo").attr("action", uploadUrl);
+				$("#upload_logo").submit();
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				console.log("can't upload image to blob service: " + jqXHR.status + " : " + errorThrown);
+			}
+		});
+	}
+	function showbox() {
+		//set the correct possition of the opening hours
+		//calculate the left position
+		var leftpos = $("#navWrapper").width();
+		var toppos = $("#open").offset().top;
+		console.log($("#openhour_holder").offset().top);
+		$("#openhours").css({
+			left: leftpos + "px",
+			top:  $("#openhour_holder").offset().top+ "px",
+		});
+		if($("#contacts").is(":visible")) {
+			$("#contacts").toggle('slide', {to:{width: 0}},400);
+		}
+		$("#openhours").toggle('slide', {to:{width: 200}},400,function(){
+			if($(this).is(":visible")) {
+				console.log("visible");
+				$(this).niceScroll({
+					touchbehavior:false,
+					cursorcolor:"rgba(0, 0, 0, 0.496094)",
+					cursoropacitymax:0.7,
+					cursorwidth:5,
+					cursorborder:"1px solid rgba(255, 255, 255, 0.898438)",
+					cursorborderradius:"3px",
+					background:"#ccc",
+					autohidemode:"scroll"});
+			}
+			else {
+				console.log("invisible");
+				$("#ascrail2001").animate({opacity: 0});
+			}
+		});
+	}
+	function showContactBox() {
+		//set the correct possition of the opening hours
+		//calculate the left position
+		var leftpos = $("#navWrapper").width();
+		var toppos = $("#open_contact").offset().top;
+		$("#contacts").css({
+			left: leftpos + "px",
+			top:  $(this).height() -$("#contact_holder").offset().top + "px",
+		});
+		if($("#openhours").is(":visible")) {
+			$("#openhours").toggle('slide', {to:{width: 0}},400);
+		}
+		$("#contacts").toggle('slide', {to:{width: 200}},400,function(){
+			if($(this).is(":visible")) {
+				console.log("visible");
+				$(this).niceScroll({
+					touchbehavior:false,
+					cursorcolor:"rgba(0, 0, 0, 0.496094)",
+					cursoropacitymax:0.7,
+					cursorwidth:5,
+					cursorborder:"1px solid rgba(255, 255, 255, 0.898438)",
+					cursorborderradius:"3px",
+					background:"#ccc",
+					autohidemode:"scroll"});
+			}
+			else {
+				console.log("invisible");
+				$("#ascrail2001").animate({opacity: 0});
+			}
+		});
+	}
+	function isTouchDevice(){
+		//return (typeof(window.ontouchstart) != 'undefined') ? true : false;
+		return true; //debug to make the touch device simulation
+	}
+	
+	function getOpenHour() {
+		var monday = $("#monday_time").val();
+		var tuesday = $("#tuesday_time").val();
+		var wednesday = $("#wednesday_time").val();
+		var thursday = $("#thursday_time").val();
+		var friday = $("#friday_time").val();
+		var saturday = $("#saturday_time").val();
+		var sunday = $("#sunday_time").val();
+		
+		if(!$("#monday").is(":checked")) {
+			monday = null;
+		}
+		if(!$("#tuesday").is(":checked")) {
+			tuesday = null;
+		}
+		if(!$("#wednesday").is(":checked")) {
+			wednesday = null;
+		}
+		if(!$("#thursday").is(":checked")) {
+			thursday = null;
+		}
+		if(!$("#friday").is(":checked")) {
+			friday = null;
+		}
+		if(!$("#saturday").is(":checked")) {
+			saturday = null;
+		}
+		if(!$("#sunday").is(":checked")) {
+			sunday = null;
+		}
+		
+		var openHours = [monday, tuesday, wednesday, thursday, friday, saturday, sunday];
+		return openHours;
+	}
+	function getComOption() {
+		if($("#chb_website").is(":checked")) {
+			
+		}
+	}
+	function cancel() {
+		businessObj.getAllBusiness(loadBusiness);
+	}
+	function addNewBusiness() {
+		var business = {
+			"businessCategoryId" : $("#businesstype option:selected").val(),
+			"longitute" : $("#lon").val(),
+			"lattitue": $("#lat").val(),
+			"businessName": $("#businessname").val(),
+			"businessDescription" : $("#businessDescription").val(),
+			"businessLongAddress" : $("#businessaddress").val(),
+			"businessShortAddress": $("#businessaddress").val(),
+			"logoUrl": $("#logoImageUrl").val(),
+			"openTime": getOpenHour(),
+			"commOption": getComOption(),
+		};
+		businessObj.addNew(business, function(){
+			businessObj.getAllBusiness(loadBusiness);
+		});
+	}
+	function arrangBusinessItem(businessItem) {
+		$("#businessaddress").val(businessItem.businessAddress);
+		$("#businessname").val(businessItem.businessName);
+		$("#businessDescription").val(businessItem.businessLongDescription);
+		$("#lat").val(businessItem.businessLat);
+		$("#lon").val(businessItem.businessLon);
+		
+		
+	}
+	document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+</script>

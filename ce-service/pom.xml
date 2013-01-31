@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.rupp.ce</groupId>
+	<artifactId>service</artifactId>
+	<version>1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>${project.groupId}:${project.artifactId}</name>
+	
+	<properties>
+		<mardao.version>2.1.0</mardao.version>
+		<java-version>1.6</java-version>
+		<org.springframework-version>3.1.1.RELEASE</org.springframework-version>
+		<spring.security.version>3.1.0.RELEASE</spring.security.version>
+		<org.aspectj-version>1.6.9</org.aspectj-version>
+		<org.slf4j-version>1.5.10</org.slf4j-version>
+		<!-- Google app -->
+		<gae.version>1.7.0</gae.version>
+		<!-- Upload to http://test.latest.<applicationName>.appspot.com by default -->
+		<gae.application.version>lab</gae.application.version>
+		
+		<!-- logging level -->
+		<logging.level>ALL</logging.level>
+		<dependency-scope />
+		
+	</properties>
+	<profiles>
+		<profile>
+			<id>test</id>
+			<properties>
+				<gae.application.version>test</gae.application.version>
+				<logging.level>ALL</logging.level>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>stage</id>
+			<properties>
+				<gae.application.version>stage</gae.application.version>
+				<logging.level>ALL</logging.level>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>prod</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+
+			<properties>
+				<gae.application.version>1</gae.application.version>
+				<logging.level>INFO</logging.level>
+			</properties>
+		</profile>
+	</profiles>
+	<dependencies>
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker-gae</artifactId>
+			<version>2.3.19</version>
+			<!-- <version>2.3.15</version> -->
+			<scope>${dependency-scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.rupp.ce</groupId>
+ 			<artifactId>client</artifactId>
+ 			<version>1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.7.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>1.7.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.flexjson</groupId>
+			<artifactId>flexjson</artifactId>
+			<version>2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<version>2.3.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<!--  -->
+		<dependency>
+            <groupId>net.sf.mardao</groupId>
+            <artifactId>mardao-gae</artifactId>
+            <version>${mardao.version}</version>
+        </dependency>
+		<!-- 
+		<dependency>
+			<groupId>net.sf.mardao</groupId>
+			<artifactId>mardao-api</artifactId>
+			<version>${mardao.version}</version>
+		</dependency>
+        -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<artifactId>standard</artifactId>
+			<groupId>taglibs</groupId>
+			<version>1.1.2</version>
+			<type>jar</type>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- 
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
+  -->
+  		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
+ 
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-expression</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+
+		
+		<!-- Google App Engine meta-package <dependency> <groupId>net.kindleit</groupId> 
+			<artifactId>gae-runtime</artifactId> <version>${gae.version}</version> <type>pom</type> 
+			</dependency> -->
+
+		<!-- +- com.google.appengine:appengine-api-1.0-sdk:jar:1.3.7:compile [INFO] 
+			| +- org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1.1:runtime [INFO] 
+			| +- com.google.appengine.orm:jdo2-api:jar:2.3-eb:runtime [INFO] | +- com.google.appengine.orm:datanucleus-core:jar:1.1.5:compile 
+			[INFO] | +- com.google.appengine.orm:datanucleus-appengine:jar:1.0.7:runtime 
+			[INFO] | +- com.google.appengine.orm:datanucleus-jpa:jar:1.1.5:runtime [INFO] 
+			| \- com.google.appengine:appengine-tools-sdk:jar:1.3.7:compile -->
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-1.0-sdk</artifactId>
+			<version>${gae.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-tools-sdk</artifactId>
+			<version>${gae.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-jpa_3.0_spec</artifactId>
+			<version>1.1.1</version>
+			<!-- For javax.persistence annotations <scope>provided</scope> -->
+		</dependency>
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-jta_1.1_spec</artifactId>
+			<version>1.1.1</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- These dependencies are here just for enabling logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<version>1.6.1</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Test scope -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.5</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<version>2.5.2</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- GAE libraries for local testing as described here: http://code.google.com/appengine/docs/java/howto/unittesting.html -->
+                <!--
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-labs</artifactId>
+			<version>${gae.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-stubs</artifactId>
+			<version>${gae.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-testing</artifactId>
+			<version>${gae.version}</version>
+			<scope>test</scope>
+		</dependency>
+                -->
+		
+                <!-- google analytics trackter -->
+        <!-- 
+		<dependency>
+			<groupId>com.dmurph</groupId>
+			<artifactId>JGoogleAnalyticsTracker</artifactId>
+			<version>1.3.4-NOAWT</version>
+		</dependency>
+		 -->
+		
+		<!--mem cache-->
+		<dependency>
+			<groupId>net.sf.jsr107cache</groupId>
+			<artifactId>jsr107cache</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-jsr107cache</artifactId>
+			<version>${gae.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- 
+		<dependency>
+            <groupId>net.sf.mardao</groupId>
+            <artifactId>mardao-aed</artifactId>
+            <version>${mardao.version}</version>
+        </dependency>
+        -->
+	</dependencies>
+
+	<build>
+		<resources>
+			<!-- base set of resources; exclude some files -->
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+
+			<!-- filter some files; excluded above -->
+			<resource>
+				<directory>${project.basedir}/src/main/filtered</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<!-- two phases: to generate generics (in generate-sources), then generate daos (in process-sources) -->
+			<plugin>
+				<groupId>net.sf.mardao</groupId>
+                <artifactId>mardao-maven-plugin</artifactId>
+                <version>${mardao.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-generics</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate-sources</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>generate-daos</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>process-classes</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <basePackage>com.ce.service</basePackage>
+                    <!-- 
+                    <persistenceType>AED</persistenceType>
+                    <containerManagedEntityManager>false</containerManagedEntityManager>
+                    <containerManagedTransactionManager>false</containerManagedTransactionManager>
+                    <sourceVersion>1.6</sourceVersion> -->
+                </configuration>
+                <!-- 
+				<groupId>net.sf.mardao</groupId>
+				<artifactId>maven-mardao-plugin</artifactId>
+				<version>${mardao.version}</version>
+				<executions>
+					<execution>
+						<id>generate-generics</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate-sources</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>generate-daos</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>process-classes</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>generate-web</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>process-classes</goal>
+						</goals>
+						<configuration>
+							<persistenceType>WEB</persistenceType>
+						</configuration>
+					</execution>
+				</executions>
+				<configuration>
+					<basePackage>com.ce.service</basePackage>
+					<persistenceType>AED</persistenceType>
+					<containerManagedEntityManager>false</containerManagedEntityManager>
+					<containerManagedTransactionManager>false</containerManagedTransactionManager>
+				</configuration>
+				-->
+			</plugin>
+
+			<!-- Java compiler version -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+				<executions>
+					<!-- extra compile step of domain classes before generator processing -->
+					<execution>
+						<id>compile-entities</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<verbose>false</verbose>
+							<fork>true</fork>
+							<includes>
+								<include>**/domain/*.java</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.basedir}/target/generated-sources/dao</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1-beta-1</version>
+				<configuration>
+					<webResources>
+						<resource>
+							<directory>src/main/webapp</directory>
+							<filtering>true</filtering>
+							<includes>
+								<include>**/appengine-web.xml</include>
+								<include>**/web.xml</include>
+							</includes>
+						</resource>
+					</webResources>
+					<archive>
+						<manifestEntries>
+							<project-version>${project.version}</project-version>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<!-- The actual maven-gae-plugin. Type "mvn gae:run" to run project, "mvn 
+				gae:deploy" to upload to GAE. -->
+			<plugin>
+				<groupId>net.kindleit</groupId>
+				<artifactId>maven-gae-plugin</artifactId>
+				<version>0.9.2</version>
+				<configuration>
+					<port>8888</port>
+					<monitorPort>8287</monitorPort>
+					<serverId>appengine.google.com</serverId>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>net.kindleit</groupId>
+						<artifactId>gae-runtime</artifactId>
+						<version>${gae.version}</version>
+						<type>pom</type>
+					</dependency>
+					<dependency>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-jdk14</artifactId>
+						<version>1.6.1</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>start-gae</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+							<goal>start</goal>
+						</goals>
+						<configuration>
+							<scanIntervalSeconds>0</scanIntervalSeconds>
+							<daemon>true</daemon>
+						</configuration>
+					</execution>
+					<execution>
+						<id>stop-gae</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<forkMode>pertest</forkMode>
+					<argLine>-Xms256m -Xmx512m</argLine>
+					<redirectTestOutputToFile>true</redirectTestOutputToFile>
+					<testFailureIgnore>true</testFailureIgnore>
+					<skip>true</skip>
+				</configuration>
+				<executions>
+					<execution>
+						<id>surefire-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<skip>false</skip>
+							<excludes>
+								<exclude>**/*ITest.java</exclude>
+							</excludes>
+						</configuration>
+
+					</execution>
+
+					<execution>
+						<id>surefire-itest</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<skip>false</skip>
+							<includes>
+								<include>**/*ITest.java</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+	    <!-- 
+		<repository>
+		 	<id>spring-milestone</id>
+		 	<name>Spring Maven MILESTONE Repository</name>
+		 	<url>http://repo.springsource.org/libs-milestone</url>
+		</repository>
+		<repository>
+      		<id>repository.jboss.org-public</id>
+      		<name>JBoss repository</name>
+      		<url>https://repository.jboss.org/nexus/content/groups/public</url>
+    	</repository>
+		 -->
+		<!-- For testing against latest Spring snapshots -->
+		<!-- 
+		<repository>
+			<id>org.springframework.maven.snapshot</id>
+			<name>Spring Maven Snapshot Repository</name>
+			<url>http://maven.springframework.org/snapshot</url>
+			<releases><enabled>false</enabled></releases>
+			<snapshots><enabled>true</enabled></snapshots>
+		</repository>
+		 -->
+		<!-- For developing against latest Spring milestones -->
+		<!-- 
+		<repository>
+			<id>org.springframework.maven.milestone</id>
+			<name>Spring Maven Milestone Repository</name>
+			<url>http://maven.springframework.org/milestone</url>
+			<snapshots><enabled>false</enabled></snapshots>
+		</repository>
+		 -->
+		<!-- 
+		<repository>
+	        <id>google-releases</id>
+	        <name>Google Releases</name>
+	        <url>https://oss.sonatype.org/content/repositories/google-releases</url>
+	    </repository>
+	    -->
+	    <!-- 
+	    <repository>
+	      	<id>datanucleus</id>
+	      	<name>data nucleus</name>
+		    <url>http://www.datanucleus.org/downloads/maven2</url>
+	    </repository>
+	     -->
+	</repositories>
+	
+	<pluginRepositories>
+		<pluginRepository>
+			<id>maven-gae-plugin-repo</id>
+			<name>Maven Google App Engine Repository</name>
+			<url>http://maven-gae-plugin.googlecode.com/svn/repository/</url>
+		</pluginRepository>
+	</pluginRepositories>
+</project>
