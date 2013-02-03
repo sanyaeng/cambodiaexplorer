@@ -18,7 +18,6 @@
 					callback(d);//businesses = d;
 				},
 				error: function(jqXHR, errString, errorThrown) {
-					console.log("error while retrieving all businesses");
 				}
 			});
 		},
@@ -78,9 +77,8 @@
 				error: function(jqXHR, status, errorThrown) {
 					switch(status) {
 						case 401:
-							console.log("Not authorize!!!");
+							break;
 						default:
-							console.log(errorThrown);
 					}
 				},
 			});
@@ -98,11 +96,9 @@
 			if(username == "" || password == "") {
 				var message = "User name or password cannot be empty";
 				if(typeof(fail) === 'function') {
-					console.log("called");
 					fail(message);
 				}
 				else {
-					console.log("callback function not found");
 				}
 			}
 			else {

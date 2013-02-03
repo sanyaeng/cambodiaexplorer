@@ -54,7 +54,6 @@ function findSelectedRow(searchTerm, tableObject) {
 	var selectedRow;
 	rows.each(function(){
 		 var hiddenVal = $(this).find("td").eq(0).find("input[type=hidden]").val();
-		 console.log(hiddenVal + "|" + searchTerm);
 		if(hiddenVal == searchTerm) {
 			selectedRow = $(this);
 		}
@@ -64,7 +63,6 @@ function findSelectedRow(searchTerm, tableObject) {
 
 function updateCommunicationTypeListing(jCommunicationTypeOption, selectedItem) {
 	var rows = findSelectedRow(selectedItem, $("#typelist"));
-	console.log("found row: " + rows.find("td").eq(0).text());
 	rows.find("td").eq(0).text(jCommunicationTypeOption.comType).find("input[type=hidden]").val(jCommunicationTypeOption).attr("id", jCommunicationTypeOption);
 	rows.find("td").eq(1).text(jCommunicationTypeOption.comDesc);
 	$("#new_communication").unbind("click");
@@ -78,7 +76,6 @@ function updateCommunicationTypeListing(jCommunicationTypeOption, selectedItem) 
  * @param jBusinessCategory
  */
 function addCommunicationTypeListing(jCommunicationTypeOption) {
-	console.log("add a row");
 	$("#typelist").append("<tr onclick='selectedComTypeItem(this);' onmouseover='updateRowColor(this, \"rowOver\");' onmouseout='updateRowColor(this, \"rowOut\");'><td><input type='hidden' id='" +jCommunicationTypeOption.comType+ "' value='" + jCommunicationTypeOption.comType + "'>"+jCommunicationTypeOption.comType + "</td><td>" + jCommunicationTypeOption.comTypeDesc + "</td></tr>");
 }
 

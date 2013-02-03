@@ -5,6 +5,37 @@
 	</div>
 </div>
 
+<div id="openhours" class="openhours" style="">
+	<fieldset>
+		<input type="checkbox" id="monday"/> <label>Monday</label>
+		<input type="text" id="monday_time" value=""/>
+	</fieldset>
+	<fieldset>
+		<input type="checkbox" id="tuesday"/> <label>Tuesday</label>
+		<input type="text" id="tuesday_time" value=""/>
+	</fieldset>
+	<fieldset>
+		<input type="checkbox" id="wednesday"/> <label>Wednesday</label>
+		<input type="text" id="wednes_time" value=""/>
+	</fieldset>
+	<fieldset>
+		<input type="checkbox" id="thursday"/> <label>Thursday</label>
+		<input type="text" id="thursday_time" value=""/>
+	</fieldset>
+	<fieldset>
+		<input type="checkbox" id="friday"/> <label>friday</label>
+		<input type="text" id="friday_time" value=""/>
+	</fieldset>
+	<fieldset>
+		<input type="checkbox" id="saturday"/> <label>Saturday</label>
+		<input type="text" id="saturday_time" value=""/>
+	</fieldset>
+	<fieldset>
+		<input type="checkbox" id="sunday"/> <label>Sunday</label>
+		<input type="text" id="sunday_time" value=""/>
+	</fieldset>
+</div>
+
 <link rel="stylesheet" href="/static/css/businesslisting.css"/>
 <script type="text/javascript">
 	var locationList = new Array();
@@ -13,7 +44,6 @@
 	}
 	function arrangeBusinessListing(jBusinessList) {
 		$.map(jBusinessList, function(jBusiness, i){
-			console.log(jBusiness);
 			var category = jBusiness.category;
 			$("<div class='listing_parent' rel='"+ jBusiness.businessId +"' id='item"+jBusiness.businessId+"'>").append($("<div class='businessview'>").append("<div class='name'><span>"+parseInt(i+1)+". </span>"+jBusiness.businessName+"</div>")
 											 							.append("<div class='category'>"+category.catDesc+"</div>")
@@ -61,5 +91,39 @@
 		
 		//
 		detailScroll = new iScroll("details_container");
+	}
+	function getOpenHour() {
+		var monday = $("#monday_time").val();
+		var tuesday = $("#tuesday_time").val();
+		var wednesday = $("#wednesday_time").val();
+		var thursday = $("#thursday_time").val();
+		var friday = $("#friday_time").val();
+		var saturday = $("#saturday_time").val();
+		var sunday = $("#sunday_time").val();
+		
+		if(!$("#monday").is(":checked")) {
+			monday = null;
+		}
+		if(!$("#tuesday").is(":checked")) {
+			tuesday = null;
+		}
+		if(!$("#wednesday").is(":checked")) {
+			wednesday = null;
+		}
+		if(!$("#thursday").is(":checked")) {
+			thursday = null;
+		}
+		if(!$("#friday").is(":checked")) {
+			friday = null;
+		}
+		if(!$("#saturday").is(":checked")) {
+			saturday = null;
+		}
+		if(!$("#sunday").is(":checked")) {
+			sunday = null;
+		}
+		
+		var openHours = [monday, tuesday, wednesday, thursday, friday, saturday, sunday];
+		return openHours;
 	}
 </script>

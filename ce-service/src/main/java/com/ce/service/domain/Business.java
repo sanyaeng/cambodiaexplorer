@@ -46,35 +46,13 @@ public class Business extends AbstractLongEntity {// extends AEDLongEntity {
     @Basic
     private String            businessShortAddress;
 
-    @Basic
-    private List<String>      openHours;
-
     // list of string, 1: website, 2: email, 3: main phone
     @Basic
     private List<String>      comoption;
 
-    // Contain the list of image needed to be displayed in the detail
-    @Basic
-    private List<String>      imagesUrl;
-
     // Business logo
     @Basic
     private String            logoUrl;
-
-    /**
-     * @return the imagesUrl
-     */
-    public List<String> getImagesUrl() {
-        return imagesUrl;
-    }
-
-    /**
-     * @param imagesUrl
-     *            the imagesUrl to set
-     */
-    public void setImagesUrl(List<String> imagesUrl) {
-        this.imagesUrl = imagesUrl;
-    }
 
     /**
      * @return the logoUrl
@@ -194,21 +172,6 @@ public class Business extends AbstractLongEntity {// extends AEDLongEntity {
      */
     public void setBusinessShortAddress(String businessShortAddress) {
         this.businessShortAddress = businessShortAddress;
-    }
-
-    /**
-     * @return the openHours
-     */
-    public List<String> getOpenHours() {
-        return openHours;
-    }
-
-    /**
-     * @param openHours
-     *            the openHours to set
-     */
-    public void setOpenHours(List<String> openHours) {
-        this.openHours = openHours;
     }
 
     /**

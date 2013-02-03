@@ -71,7 +71,6 @@
 			if(typeof that.items === 'undefined') {
 				that.items = new Array();
 			}
-			console.log(typeof that.keys);
 			if(typeof that.keys === 'undefined') {
 				that.keys = new Array();
 			}
@@ -81,7 +80,6 @@
 		remove: function(key) {
 			var that = this;
 			if(typeof that.items === 'undefined') {
-				console.log("nothing to be removed!!!");
 				return;
 			}
 			var item;
@@ -93,7 +91,6 @@
 				}
 			}
 			if(!found) {
-				console.log("Item not found with the provided key");
 				return;
 			}
 			for(var i in that.items) {
@@ -121,7 +118,6 @@
 		getItem: function(key) {
 			var that = this;
 			if(typeof that.items === 'undefined') {
-				console.log("nothing to be removed!!!");
 				return;
 			}
 			var item;

@@ -100,7 +100,7 @@ public class BusinessController {// extends GeneratedBusinessController {
 
         business.setUsername(principl.getName());
         if (null != openTime) {
-            business.setOpenHours(Arrays.asList(openTime));
+            // business.setOpenHours(Arrays.asList(openTime));
         }
         if (null != commOption) {
             business.setComoption(Arrays.asList(commOption));
@@ -159,7 +159,7 @@ public class BusinessController {// extends GeneratedBusinessController {
             jBusiness.setBusinessLat(business.getLattitue());
             jBusiness.setBusinessLon(business.getLongitute());
             jBusiness.setBusinessShortDescription(business.getBusinessDescription());
-            jBusiness.setOpenHours(this.getOpeningHours(business.getOpenHours()));
+            // jBusiness.setOpenHours(this.getOpeningHours(business.getOpenHours()));
             BusinessCategory cat = busCatDao.findByPrimaryKey(business.getBusinessCategoryId());
             jBusiness.setCategory(this.convert(cat));
             buzes.add(jBusiness);

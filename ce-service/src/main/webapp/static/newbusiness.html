@@ -37,10 +37,6 @@
 		<span>Contacts</span><span id="open_contact" style="float:right" onclick="showContactBox();">Open</span>
 	</fieldset>
 	<hr id="contact_holder"/>
-	<fieldset id="comoptionholder">
-		<span>Open Hours</span><span id="open" style="float:right" onclick="showbox();">Open</span>
-	</fieldset>
-	<hr id="openhour_holder"/>
 	<fieldset>
 		<label>Latitude</label>
 		<input type="text" id="lat" class="lat" value="" name="lat"/>
@@ -56,36 +52,7 @@
 		<button onclick="cancel();" class="savebutton">Cancel</button>
 	</fieldset>
 </div>
-<div id="openhours" class="openhours" style="">
-	<fieldset>
-		<input type="checkbox" id="monday"/> <label>Monday</label>
-		<input type="text" id="monday_time" value=""/>
-	</fieldset>
-	<fieldset>
-		<input type="checkbox" id="tuesday"/> <label>Tuesday</label>
-		<input type="text" id="tuesday_time" value=""/>
-	</fieldset>
-	<fieldset>
-		<input type="checkbox" id="wednesday"/> <label>Wednesday</label>
-		<input type="text" id="wednes_time" value=""/>
-	</fieldset>
-	<fieldset>
-		<input type="checkbox" id="thursday"/> <label>Thursday</label>
-		<input type="text" id="thursday_time" value=""/>
-	</fieldset>
-	<fieldset>
-		<input type="checkbox" id="friday"/> <label>friday</label>
-		<input type="text" id="friday_time" value=""/>
-	</fieldset>
-	<fieldset>
-		<input type="checkbox" id="saturday"/> <label>Saturday</label>
-		<input type="text" id="saturday_time" value=""/>
-	</fieldset>
-	<fieldset>
-		<input type="checkbox" id="sunday"/> <label>Sunday</label>
-		<input type="text" id="sunday_time" value=""/>
-	</fieldset>
-</div>
+
 <div id="contacts" class="contacts" style="">
 	<fieldset>
 		<input type="checkbox" id="chb_website"/> <label>Website</label>
@@ -110,21 +77,19 @@
 			accept: "*",
 			success: function(jUpload) {
 				var uploadUrl = jUpload.uploadUrl.replace("GGPP", "localhost"); 
-				console.log(uploadUrl);
 				$("#upload_logo").attr("action", uploadUrl);
 				$("#upload_logo").submit();
 			},
 			error: function(jqXHR, textStatus, errorThrown){
-				console.log("can't upload image to blob service: " + jqXHR.status + " : " + errorThrown);
 			}
 		});
 	}
+	/*
 	function showbox() {
 		//set the correct possition of the opening hours
 		//calculate the left position
 		var leftpos = $("#navWrapper").width();
 		var toppos = $("#open").offset().top;
-		console.log($("#openhour_holder").offset().top);
 		$("#openhours").css({
 			left: leftpos + "px",
 			top:  $("#openhour_holder").offset().top+ "px",
@@ -134,7 +99,6 @@
 		}
 		$("#openhours").toggle('slide', {to:{width: 200}},400,function(){
 			if($(this).is(":visible")) {
-				console.log("visible");
 				$(this).niceScroll({
 					touchbehavior:false,
 					cursorcolor:"rgba(0, 0, 0, 0.496094)",
@@ -146,11 +110,10 @@
 					autohidemode:"scroll"});
 			}
 			else {
-				console.log("invisible");
 				$("#ascrail2001").animate({opacity: 0});
 			}
 		});
-	}
+	}*/
 	function showContactBox() {
 		//set the correct possition of the opening hours
 		//calculate the left position
@@ -160,12 +123,12 @@
 			left: leftpos + "px",
 			top:  $(this).height() -$("#contact_holder").offset().top + "px",
 		});
+		/*
 		if($("#openhours").is(":visible")) {
 			$("#openhours").toggle('slide', {to:{width: 0}},400);
-		}
+		}*/
 		$("#contacts").toggle('slide', {to:{width: 200}},400,function(){
 			if($(this).is(":visible")) {
-				console.log("visible");
 				$(this).niceScroll({
 					touchbehavior:false,
 					cursorcolor:"rgba(0, 0, 0, 0.496094)",
@@ -177,7 +140,6 @@
 					autohidemode:"scroll"});
 			}
 			else {
-				console.log("invisible");
 				$("#ascrail2001").animate({opacity: 0});
 			}
 		});
@@ -187,40 +149,7 @@
 		return true; //debug to make the touch device simulation
 	}
 	
-	function getOpenHour() {
-		var monday = $("#monday_time").val();
-		var tuesday = $("#tuesday_time").val();
-		var wednesday = $("#wednesday_time").val();
-		var thursday = $("#thursday_time").val();
-		var friday = $("#friday_time").val();
-		var saturday = $("#saturday_time").val();
-		var sunday = $("#sunday_time").val();
-		
-		if(!$("#monday").is(":checked")) {
-			monday = null;
-		}
-		if(!$("#tuesday").is(":checked")) {
-			tuesday = null;
-		}
-		if(!$("#wednesday").is(":checked")) {
-			wednesday = null;
-		}
-		if(!$("#thursday").is(":checked")) {
-			thursday = null;
-		}
-		if(!$("#friday").is(":checked")) {
-			friday = null;
-		}
-		if(!$("#saturday").is(":checked")) {
-			saturday = null;
-		}
-		if(!$("#sunday").is(":checked")) {
-			sunday = null;
-		}
-		
-		var openHours = [monday, tuesday, wednesday, thursday, friday, saturday, sunday];
-		return openHours;
-	}
+	
 	function getComOption() {
 		if($("#chb_website").is(":checked")) {
 			
@@ -239,7 +168,7 @@
 			"businessLongAddress" : $("#businessaddress").val(),
 			"businessShortAddress": $("#businessaddress").val(),
 			"logoUrl": $("#logoImageUrl").val(),
-			"openTime": getOpenHour(),
+			//"openTime": getOpenHour(),
 			"commOption": getComOption(),
 		};
 		businessObj.addNew(business, function(){

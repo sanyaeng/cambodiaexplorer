@@ -1,8 +1,41 @@
 (function(){
+	(function(){
+		var BusinessDetail = function() {
+			var that = this;
+			that.detailUrl = "http://" + location.host + "/api/businessDetail";
+		};
+		BusinessDetail.prototype = {
+			getDetail: function(businessId, success, fail){
+				var that = this;
+				$.ajax({
+					url: that.detailUrl + "/detail?businessId="+businessId,
+					type: "GET",
+					dataType: "json",
+					success: function(detail){
+						if(typeof callBack === 'function') {
+							success(detail);
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						if(typeof fail === 'function') {
+							fail(jqXHR.status);
+						}
+					}
+				});
+			},
+			addDetail: function(detail, success, fail) {
+				var that = this;
+				
+			},
+		};
+		if(typeof exports != "undefined") exports.BusinessDetail = BusinessDetail;
+		else window.BusinessDetail = BusinessDetail;
+	})();
 	var Business = function() {
 		var that = this;
 		that.businessUrl = "http://" + location.host + "/business/";
-		that.businessDetailUrl = "http://" + location.host + "/api/businessDetail";
+		//that.businessDetailUrl = "http://" + location.host + "/api/businessDetail";
+		that.detail = new BusinessDetail();
 	};
 	Business.prototype = {
 		getAllBusinessCategories: function(callback){
@@ -16,7 +49,6 @@
 					callback(businessCats);
 				},
 				error: function(jqXHR, textStatus, errorThrown){
-					console.log("can't get business category: " + jqXHR.status + " : " + errorThrown);
 				}
 			});
 		},
@@ -67,21 +99,9 @@
 				}
 			});
 		},
-		getDetail: function(id, callBack) {
+		getDetail: function(detail, callBack, failCallback) {
 			var that = this;
-			$.ajax({
-				url: that.businessDetailUrl + "/detail?id="+id,
-				type: "GET",
-				dataType: "json",
-				success: function(detail){
-					if(typeof callBack === 'function') {
-						callBack(detail);
-					}
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					alert("Internal server error: " + jqXHR.status + " : " + errorThrown);
-				}
-			});
+			that.detail.getDetail(detail, callBack, failCallback);
 		},
 	};
 	if (typeof exports !== 'undefined') exports.Business = Business;

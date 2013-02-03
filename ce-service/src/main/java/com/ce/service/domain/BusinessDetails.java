@@ -34,6 +34,24 @@ public class BusinessDetails extends AbstractLongEntity {
     @Basic
     private List<String>      imageUrls;
 
+    @Basic
+    private List<String>      openHours;
+
+    /**
+     * @return the openHours
+     */
+    public List<String> getOpenHours() {
+        return openHours;
+    }
+
+    /**
+     * @param openHours
+     *            the openHours to set
+     */
+    public void setOpenHours(List<String> openHours) {
+        this.openHours = openHours;
+    }
+
     /**
      * @return the businessId
      */

@@ -28,7 +28,6 @@
 		that._clearAllMarkers = function() {
 			var that = this;
 			var keys = that.markers.getKeys();
-			console.log(" >>> : " + that.markers);
 			for(var k in keys) {
 				that.markers.getItem(keys[k]).setMap(null);
 			}
@@ -88,7 +87,6 @@
 				//clear all open bubble
 				var keys = that.bubbles.getKeys();
 				for(i in keys) {
-					console.log(that.bubbles.getItem(keys[i]));
 					if(that.bubbles.getItem(keys[i]).isOpen()) {
 						that.bubbles.getItem(keys[i]).close();
 					}
@@ -96,7 +94,6 @@
 				//open the clicked one
 				infoWindow.open(that.map, marker);
 			});
-			console.log("bubble count: " + that.bubbles.count());
 		}
 	};
 	
@@ -180,7 +177,6 @@
 			var that = this;
 			var keys = that.bubbles.getKeys();
 			for(i in keys) {
-				console.log(that.bubbles.getItem(keys[i]));
 				if(that.bubbles.getItem(keys[i]).isOpen()) {
 					that.bubbles.getItem(keys[i]).close();
 				}
@@ -191,7 +187,6 @@
 		 * Init the map
 		 */
 		init: function(){
-			console.log("init...");
 			var that = this;
 			var myLatLng = new google.maps.LatLng(that.location.getLatitude(),that.location.getLongitude());
 			var myOptions = {

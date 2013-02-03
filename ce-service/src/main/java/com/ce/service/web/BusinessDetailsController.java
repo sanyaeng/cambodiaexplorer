@@ -3,11 +3,14 @@
  */
 package com.ce.service.web;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.mortbay.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +28,13 @@ import com.ce.service.json.JBusinessDetails;
  * 
  */
 @Controller
-@RequestMapping({"/businessDetail", "/api/businessDetail"})
+@RequestMapping(value = "/api/businessDetail")
 public class BusinessDetailsController {
 
     @Autowired
     private BusinessDetailsDao detailDao;
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "add", method = RequestMethod.POST)
     public ResponseEntity<JBusinessDetails> add(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(value = "payment") String[] payment, @RequestParam(value = "imgUrl") String[] imgUrls,
             BusinessDetails details) {
@@ -48,7 +51,7 @@ public class BusinessDetailsController {
         return new ResponseEntity<JBusinessDetails>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    @RequestMapping(value = "detail", method = RequestMethod.GET)
     public ResponseEntity<JBusinessDetails> getDetail(HttpServletRequest request, HttpServletResponse response,
             @RequestParam Long id) {
         BusinessDetails detail = detailDao.findByPrimaryKey(id);
@@ -56,6 +59,23 @@ public class BusinessDetailsController {
             return new ResponseEntity<JBusinessDetails>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<JBusinessDetails>(convert(detail), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "detail", method = RequestMethod.GET, params = {"businessId"})
+    public ResponseEntity<List<JBusinessDetails>> getDetails(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam Long businessId) {
+        Iterable<BusinessDetails> detail = detailDao.queryByBusinessId(businessId);
+        if (null == detail) {
+            return new ResponseEntity<List<JBusinessDetails>>(HttpStatus.NOT_FOUND);
+        }
+        List<JBusinessDetails> jDetails = new ArrayList<JBusinessDetails>();
+        for(BusinessDetails businessDetails : detail) {
+            jDetails.add(convert(businessDetails));
+        }
+        if (jDetails.isEmpty()) {
+            return new ResponseEntity<List<JBusinessDetails>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<List<JBusinessDetails>>(jDetails, HttpStatus.OK);
     }
 
     private JBusinessDetails convert(BusinessDetails details) {

@@ -43,7 +43,7 @@ var scrollContent,
 var detailLoaded = false;
     
 document.body.addEventListener("click", function(e) {
-	if("update" != e.target.parentNode.id && "businessview" != e.target.parentNode.className && "listing_parent" != e.target.parentNode.className) {
+	if("detailscontainer" != e.target.className && e.target.className != "moredetails" && (e.target.className != "details" && "moredetails" != e.target.parentNode.className) && "update" != e.target.parentNode.id && "businessview" != e.target.parentNode.className && "listing_parent" != e.target.parentNode.className) {
 		//close all popup and slide element
 		if($("#details_container").is(":visible")) {
 			$(".item_selected").removeClass("item_selected");
@@ -59,7 +59,6 @@ document.body.addEventListener("click", function(e) {
 
 function resetDetail() {
 	var top = $(window).height() - ($("#details_container").height() + $(".footer").height() + 5);
-	console.log(top);
 	$("#details_container").css({
 		"top": top + "px",
 		"width": $("#map").width() - 20 + "px",
@@ -213,7 +212,6 @@ function loadListing(listing) {
  * If there no any selected element, alert a lovely message to the user to select an element to be updated
  */
 function loadUpdate() {
-	console.log($("#details_container").length);
 	if(!$("#details_container").is(":visible")) {
 		alert("Please select an item to update!!!!");
 	}
@@ -246,29 +244,38 @@ function loadDetail() {
 	}
 }
 
+function addDetailElement(detail) {
+	detailScroll.refresh();
+}
+
+function addDetailLink(businessId) {
+	//push a link for user to add the details
+	//$("#ajaxloader").hide();
+	var link = $("<br/><a class='btn' onclick='newDetail();'> Add Details </a>");
+	$(".details .businessview").append(link);
+	$("#contact_details").hide("drop", function(){
+		$(this).remove();
+		
+	$("#contact_details").remove();
+	});
+	detailScroll.refresh();
+	
+}
+
+function newDetail() {
+	var openHours = $("#openhours");
+	$("#details_container").children().append(openHours);
+	openHours.effect("slide", {direction: "right"}, 100);
+	detailScroll.refresh();
+}
+
 function pushDetailBlock() {
 	var id = $("#details_container").data("buzId");
 	if(!detailLoaded) {
-		$("#details_container").children().append("<div id='contact_details' class='details' style='display:none;'><div id='contacts' data-target='contacts' style='width:98%;height:auto'><img id='ajaxloader' src='static/css/img/ajax_loader.gif'/></div></div>");
+		$("#details_container").children().append("<div id='contact_details' class='details' style='display:none;'><div id='contacts' class='moredetails' data-target='contacts' style='width:98%;height:auto'><img id='ajaxloader' src='static/css/img/ajax_loader.gif'/></div></div>");
 		$("#contact_details").effect("slide", {direction: "right"}, 100);
 	}
-	businessObj.getDetail(id, function(detail) {
-		if(detail != undefined) {
-			//check if specific details are available then add to its block. otherwise push link to add the specific detail
-			
-		}
-		else {
-			//push a link for user to add the details
-			$("#ajaxloader").hide();
-			$("#details_container").children().children().each(function(){
-				//get the detail target
-				var target = $(this).data("target");
-				var link = $("<a onclick='business.addDetail(\""+ target +"\")'> Add "+ target + "</a>");
-				$(this).append(link);
-			});
-		}
-		detailScroll.refresh();
-	});
+	businessObj.getDetail(id, function(detail){addDetailElement(detail);}, function(){addDetailLink(id)});
 	detailLoaded = true;
 }
 function refreshMapPosition(p) {
