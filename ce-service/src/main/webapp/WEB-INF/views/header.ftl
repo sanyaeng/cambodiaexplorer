@@ -11,6 +11,19 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 	
+	<link rel="stylesheet" href="/static/css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="/static/css/main.css"/>
+	
+	<!-- need to move these js to the bottom for the peforman-->
+	<script type="text/javascript" src="/static/js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/static/js/jquery-ui-1.8.21.custom.min.js"></script>
+	<script type="text/javascript" src="/static/js/iscroll.js"></script>
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="/static/js/utils/userlogin.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.iframe-post-form.js"></script>
+	<script type="text/javascript" src="/static/js/utils/location.js"></script>
+	<script type="text/javascript" src="/static/js/main.js"></script>
 </head>
 <body>
 	

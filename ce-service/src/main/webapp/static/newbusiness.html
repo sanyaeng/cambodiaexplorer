@@ -1,56 +1,64 @@
 <div id="business_left">
-	<fieldset>
-		<label>Business Category</label>
-		<select id="businesstype" name="businesstype">
-			<option value="-1">Select business type</option>
-		</select>
-	</fieldset>
-	<hr/>
-	<fieldset>
-		<form id="upload_logo" action="" method="POST" enctype="multipart/form-data" style="float:left;">
-			<label>Business Logo</label>
-			<input type="hidden" id="logoImageUrl" /> <!-- used for storing the logo url -->
-			<div class="savebutton">
-				<span>Add Logo</span>
-				<input type="file" name="file_upload" id="file_upload">
+	<div class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" for="businesstype">Business Category</label>
+			<div class="controls">
+				<select id="businesstype" name="businesstype">
+					<option value="-1">Select business type</option>
+				</select>
 			</div>
-		</form>
-		<div id="logo_thumnail" style="width:100px;height:100px;float:right;border:1px inset;"></div>
-	</fieldset>
-	<hr/>
-	<fieldset>
-		<label>Business Name</label>
-		<input type="text" id="businessname" name="business" value=""/>
-	</fieldset>
-	<hr/>
-	<fieldset>
-		<label>Business Description</label>
-		<textarea id="businessDescription" name="businessDescription" rows="11" cols="35"></textarea>
-	</fieldset>
-	<hr/>
-	<fieldset>
-		<label>Business Address</label>
-		<input type="text" name="businessaddress" id="businessaddress" class="businessaddress"/>
-	</fieldset>
-	<hr/>
-	<fieldset id="comoptionholder">
-		<span>Contacts</span><span id="open_contact" style="float:right" onclick="showContactBox();">Open</span>
-	</fieldset>
-	<hr id="contact_holder"/>
-	<fieldset>
-		<label>Latitude</label>
-		<input type="text" id="lat" class="lat" value="" name="lat"/>
-	</fieldset>
-	<hr/>
-	<fieldset>
-		<label>Lontitude</label>
-		<input type="text" id="lon" class="lon" value="" name="lon"/>
-	</fieldset>
-	<hr/>
-	<fieldset>
-		<button onclick="addNewBusiness();" class="savebutton">Save</button>
-		<button onclick="cancel();" class="savebutton">Cancel</button>
-	</fieldset>
+		</div>
+		<div class="control-group">
+			<input type="hidden" id="logoImageUrl"/>
+			<label class="control-label" for="upload_logo">Business Logo</label>
+			<div class="controls">
+				<form id="upload_logo" action="" method="POST" enctype="multipart/form-data">
+					<input type="text" readonly="true" id="file" value=""/>
+					<input style="opacity:0;position:absolute;top:91px;left:0;margin-left:160px;" type="file" name="file_upload" id="file_upload" class="input-file">
+				</form>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="businessname">Business Name</label>
+			<div class="controls">
+				<input type="text" id="businessname" name="business" value=""/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="businessDescription">Business Description</label>
+			<div class="controls">
+				<textarea id="businessDescription" name="businessDescription" rows="11" cols="35"></textarea>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="businessaddress">Business Address</label>
+			<div class="controls">
+				<input type="text" name="businessaddress" id="businessaddress" class="businessaddress"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Contacts</label>
+			<div class="controls">
+				<a href="#addContactModal">Open</a>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Latitude</label>
+			<div class="controls">
+				<input type="text" id="lat" class="lat" value="" name="lat" readonly="true"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Longitude</label>
+			<div class="controls">
+				<input type="text" id="lon" class="lon" value="" name="lon" readonly="true"/>
+			</div>
+		</div>
+		<div class="form-actions">
+			<a class="btn btn-primary" onclick="addNewBusiness();">Save</a>
+			<a class="btn btn-primary" onclick="cancel();">Cancel</a>
+		</div>
+	</div>
 </div>
 
 <div id="contacts" class="contacts" style="">
@@ -67,7 +75,7 @@
 		<input type="text" id="main_phone" value=""/>
 	</fieldset>
 </div>
-<link rel="stylesheet" href="/static/css/newbusiness.css"/>
+<link rel="stylesheet" href="css/newbusiness.css"/>
 <script type="text/javascript">
 	function uploadImage() {
 		$.ajax({
@@ -84,36 +92,6 @@
 			}
 		});
 	}
-	/*
-	function showbox() {
-		//set the correct possition of the opening hours
-		//calculate the left position
-		var leftpos = $("#navWrapper").width();
-		var toppos = $("#open").offset().top;
-		$("#openhours").css({
-			left: leftpos + "px",
-			top:  $("#openhour_holder").offset().top+ "px",
-		});
-		if($("#contacts").is(":visible")) {
-			$("#contacts").toggle('slide', {to:{width: 0}},400);
-		}
-		$("#openhours").toggle('slide', {to:{width: 200}},400,function(){
-			if($(this).is(":visible")) {
-				$(this).niceScroll({
-					touchbehavior:false,
-					cursorcolor:"rgba(0, 0, 0, 0.496094)",
-					cursoropacitymax:0.7,
-					cursorwidth:5,
-					cursorborder:"1px solid rgba(255, 255, 255, 0.898438)",
-					cursorborderradius:"3px",
-					background:"#ccc",
-					autohidemode:"scroll"});
-			}
-			else {
-				$("#ascrail2001").animate({opacity: 0});
-			}
-		});
-	}*/
 	function showContactBox() {
 		//set the correct possition of the opening hours
 		//calculate the left position
@@ -123,26 +101,7 @@
 			left: leftpos + "px",
 			top:  $(this).height() -$("#contact_holder").offset().top + "px",
 		});
-		/*
-		if($("#openhours").is(":visible")) {
-			$("#openhours").toggle('slide', {to:{width: 0}},400);
-		}*/
-		$("#contacts").toggle('slide', {to:{width: 200}},400,function(){
-			if($(this).is(":visible")) {
-				$(this).niceScroll({
-					touchbehavior:false,
-					cursorcolor:"rgba(0, 0, 0, 0.496094)",
-					cursoropacitymax:0.7,
-					cursorwidth:5,
-					cursorborder:"1px solid rgba(255, 255, 255, 0.898438)",
-					cursorborderradius:"3px",
-					background:"#ccc",
-					autohidemode:"scroll"});
-			}
-			else {
-				$("#ascrail2001").animate({opacity: 0});
-			}
-		});
+		$("#contacts").toggle('slide', {to:{width: 200}},4000);
 	}
 	function isTouchDevice(){
 		//return (typeof(window.ontouchstart) != 'undefined') ? true : false;

@@ -9,24 +9,13 @@ div.savebutton {
 	padding: 0 10px 0 10px;
 	margin-top: 5px;
 }
-input[type="file"] {
-	position: absolute;
-	opacity: 0;
-	left: 10px;
-	width: 90px;
-	height: 32px;
-}
-div.map {
-	width: 75%;
-	float:left;
-	/*height: 200px;*/
-}
 
 div#header,nav,aside,section,article {
 	display:block;
 }
 
 #businessbody {
+	/*
 	width:25%; 
 	height:100%;
 	position:relative;
@@ -39,7 +28,7 @@ div#header,nav,aside,section,article {
 	-moz-box-orient:horizontal;
 	-o-box-orient:horizontal;
 	box-orient:horizontal;
-	
+	*/
 	/*background:#424242;*/
 }
 
@@ -102,16 +91,16 @@ div.map_header {
 	padding:20px;
 }
 
+/*
 #navWrapper {
 	top:44px; bottom:0; left:0; right:0;
 	font-size:15px;
 	position: absolute;
 	border-right: 1px solid #838A9A;
-	/*height: 600px;*/
 	background: #ccc;
 	overflow:auto;
 }
-
+*/
 div#contentWrapper {
 	position:absolute;
 	top:44px; bottom:0; left:0; right:0;
@@ -120,7 +109,7 @@ div#contentWrapper {
 	
 }
 #businessbody {
-	float:left;
+	/*float:left;*/
 }
 
 #business_left fieldset {

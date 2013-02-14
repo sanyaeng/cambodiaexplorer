@@ -1,7 +1,7 @@
 (function(){
 	var User = function(container){
 		var that = this;
-		that.userUrl = "http://" + location.host + "/user/";
+		that.userUrl = "/user/";
 		that.container = container;
 		that.message = "";
 		that.loginUser;
@@ -52,11 +52,8 @@
 				success: function(userLogin) {
 					that.loginUser = userLogin;
 					if(typeof(callback) === 'function'){
-						callback();
+						callback(userLogin);
 					}
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					alert(errorThrown);
 				},
 				statusCode: {
 					409: function(){
@@ -65,20 +62,20 @@
 				}
 			});
 		},
-		getUserLogin: function(callback) {
+		getUserLogin: function(successCallback, failCallback) {
 			var that = this;
 			$.ajax({
 				url: that.userUrl + "api/getMe",
 				type: "GET",
 				dataType: "json",
 				success: function(userLogin) {
-					callback(userLogin);
+					if(typeof successCallback === 'function') {
+						successCallback(userLogin);
+					}
 				},
 				error: function(jqXHR, status, errorThrown) {
-					switch(status) {
-						case 401:
-							break;
-						default:
+					if(typeof failCallback === 'function') {
+						failCallback(jqXHR.status);
 					}
 				},
 			});

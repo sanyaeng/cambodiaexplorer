@@ -34,7 +34,7 @@ function updLocation(p) {
 	}
 	setTimeout(function(){
 		google.maps.event.addListener(gmap.map, 'click', function(event) {
-			gmap.placeMarker(event.latLng, false, '/static/images/flag'+trim($("#businesstype option:selected").text()).toLowerCase()+'.png', function(clickedLocation){
+			gmap.placeMarker(event.latLng, false, 'images/flag'+trim($("#businesstype option:selected").text()).toLowerCase()+'.png', function(clickedLocation){
 				$("#lat").val(clickedLocation.lat());
 				$("#lon").val(clickedLocation.lng());
 			});
@@ -52,4 +52,11 @@ function trim(str) {
 		newStr += splitStr[i];
 	}
     return newStr;
+}
+
+//load the page to the container
+function loadPageContent(page) {
+	$.get("" + page + ".html", function(content){
+		$(".contents-wrapper").html(content);
+	});
 }

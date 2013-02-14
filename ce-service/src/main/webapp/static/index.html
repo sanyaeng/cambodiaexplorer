@@ -1,4 +1,29 @@
-<#include "header.ftl"/>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv='content-type' content='text/html; charset=utf-8' />
+	<meta name="viewport" content="initial-scale = 1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	
+	<link rel="stylesheet" href="css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="css/fam-icons.css"/>
+	<link rel="stylesheet" href="css/main.css"/>
+	
+	<!-- need to move these js to the bottom for the peforman-->
+	<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="js/jquery.contextMenu.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.21.custom.min.js"></script>
+	<script type="text/javascript" src="js/iscroll.js"></script>
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="js/utils/userlogin.js"></script>
+	<script type="text/javascript" src="js/jquery.iframe-post-form.js"></script>
+	<script type="text/javascript" src="js/utils/location.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+</head>
+<body>
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container-fluid">
@@ -10,7 +35,7 @@
 				<a class="brand" href="/">Cambodia Explorer Service</a>
 				<div class="nav-collapse collapse">
 					<ul class="nav navbar-text pull-right">
-       					<li class="dropdown">
+       					<li class="dropdown" id="login">
        						<a class="dropdown-toggle" data-toggle="dropdown">Login</a>
        						<ul class="dropdown-menu dropdown-login">
        							<li>
@@ -31,25 +56,32 @@
        							</li>
        						</ul>
        					</li>
-       					<!--
-       					<li class="dropdown">
+       					<li class="dropdown hide" id="user-logged-in">
 	         				<a class="dropdown-toggle" data-toggle="dropdown"><span class="icon-white icon-user"></span> <span id="headerUsername"></span> <b class="caret"></b></a>
 	         				<ul class="dropdown-menu">
 	         					<li class="divider"></li>
 		         				<li><a id="headerUserAction" href="" >Logout</a></li>
 	         				</ul>
-       					</li> -->
+       					</li>
        				</ul>
-					<ul class="nav">
-						<li class="active"><a href="#">Home</a></li>
-						<li><a href="#about">About</a></li>
-						<li><a href="#contact">Contact</a></li>
+					<ul class="nav navbar-text hide" id="user-business">
+						<li class="dropdown" id="user-business">
+	         				<a class="dropdown-toggle" data-toggle="dropdown"><span id="userBusiness">Business </span> <b class="caret"></b></a>
+	         				<ul class="dropdown-menu">
+	         					<li><a href="javascript:loadNewBusiness()"><span class="fam-add"></span> New Business</a></li>
+	         					<li class="divider"></li>
+	         					<li class="dropdown-submenu">
+	         						<a tabindex="-1" href="#"><span class="fam-application-view-list"></span> Businesses</a>
+									<ul class="dropdown-menu" id="user-business-nav-list"></ul>
+	         					</li>
+	         				</ul>
+       					</li>
 					</ul>
 				</div><!--/.nav-collapse -->
 			</div>
 		</div>
 	</div>
-	<div class="container-fluid">
+	<div class="container-fluid contents-wrapper-container">
 		<div class="contents-wrapper">
 			<div class="alert alert-success hide">
 				<a class="close" data-dismiss="alert">×</a>
@@ -90,36 +122,38 @@
 						</div>
 					</fieldset>
 				</form>
-			<div>
+			</div>
 		</div>
 	</div> <!-- /container -->
 	<script type="text/javascript">
+		$.ajaxSetup( {
+		    cache: false,
+		    data: null
+		});
 		var user = new User();
 		$(function(){
 			//check user logged in
 			user.getUserLogin(function(u){loadUserHome(u);}, function(){
+				$("#headerUsername").text("");
+				$("#login").removeClass("hide").addClass("show");
+				$("#user-logged-in").removeClass("show").addClass("hide");
 				$("#loginForm").iframePostForm({
 					json : true,
 					complete : function (response){
-						console.log(response);
 						loadUserHome(response);
 					}
 				});
 			});
 		});
 		function loadUserHome(u) {
-			console.log(u);
+			var name = u.displayName == ""? u.username : u.displayName;
+			$("#login").removeClass("show").addClass("hide");
+			$("#headerUsername").text(name);
+			$("#user-logged-in").removeClass("hide").addClass("show");
 			loadPageContent("business");
 		}
 		function userSignin() {
 			$("#loginForm").submit();
-		}
-		function toggleUserEdit() {
-			$('#logout').toggle('fast');
-		}
-		
-		function signup() {
-			$("#content").load("static/signup.html");
 		}
 		
 		/**
@@ -149,5 +183,6 @@
 			}
 		}
 	</script>
-	<!--
-<#include "footer.ftl"/> -->
+
+</body>
+</html>

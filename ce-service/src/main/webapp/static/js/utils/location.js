@@ -36,7 +36,7 @@
 		},
 		getLocationIcon: function() {
 			var that = this;
-			return "/static/images/flag" + that.locationType.toLowerCase() + ".png";
+			return "images/flag" + that.locationType.toLowerCase() + ".png";
 		},
 		getLocationInfo: function() {
 			var that = this;

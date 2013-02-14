@@ -51,6 +51,7 @@ public class CeUserDetailsService implements UserDetailsService {
             // password will be encrypted before set
             String encoded = passwordEncoder.encode(password);
             user.setPassword(encoded);
+            // user.setPassword(password);
         }
         userDao.update(user);
         // user = (User) loadUserByUsername(user.getUsername());

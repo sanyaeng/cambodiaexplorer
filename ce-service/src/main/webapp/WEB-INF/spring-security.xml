@@ -12,8 +12,7 @@
     <http pattern="/static/**.html" security="none" xmlns="http://www.springframework.org/schema/security"/>
     
 	<http pattern="/admin/adminform.html" security="none" xmlns="http://www.springframework.org/schema/security"/>
-	<http pattern="/user/login.html" security="none" xmlns="http://www.springframework.org/schema/security"/>
-	<http pattern="/user/loginfailed.html" security="none" xmlns="http://www.springframework.org/schema/security"/>
+	<http pattern="/" security="none" xmlns="http://www.springframework.org/schema/security"/>
 	<http pattern="/user/api/addNew" security="none" xmlns="http://www.springframework.org/schema/security"/>
 	<http pattern="/blob/api/**" security="none" xmlns="http://www.springframework.org/schema/security"/>
 	<http pattern="/favicon.ico" security="none" xmlns="http://www.springframework.org/schema/security"/> 
@@ -29,8 +28,8 @@
 		<intercept-url pattern="/**/api/*" access="ROLE_ADMIN, ROLE_USER"/>
 		 -->
 		<intercept-url pattern="/admin/adminform.html" access="ROLE_ADMIN" />
-		<form-login login-page="/user/login.html" default-target-url="/" authentication-failure-url="/user/loginfailed.html" />
-		<logout logout-success-url="/user/logout.html" />
+		<form-login login-page="/" default-target-url="/" authentication-failure-url="/" />
+		<logout logout-success-url="/" />
 		<intercept-url pattern="/**" access="ROLE_USER" />
 	</http>
  
@@ -53,26 +52,4 @@
 	<bean id="passwordEncoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder">
         <constructor-arg name="secret" value="cambodia"/>
     </bean>
-	
-<!-- 	
-	<authentication-manager alias="authenticationManager">
-	    <authentication-provider ref="authenticationProvider"/>
-	</authentication-manager>
-	
-	<bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
-	    <property name="userDetailsService" ref="userDetailsService"/>
-	</bean>
--->
-<!-- 
-	<bean id="basicAuthenticationFilter"
-          class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="authenticationEntryPoint" ref="authenticationEntryPoint"/>
-    </bean>
-
-    <bean id="authenticationEntryPoint"
-          class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
-        <property name="realmName" value="Cambodia Explorer Security"/>
-    </bean>
-    -->
 </beans>

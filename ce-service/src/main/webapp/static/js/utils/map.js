@@ -152,7 +152,7 @@
 				that.currentLocMarker = new google.maps.Marker({
 					position: clickedLocation,
 					map: that.map,
-					icon: "/static/images/userPin.png",
+					icon: "images/userPin.png",
 					title: "Your current location"
 				}); 
 			}
@@ -219,7 +219,7 @@
 			that.currentLocMarker = new google.maps.Marker({
 				position: new google.maps.LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
 				map: that.map,
-				icon: "/static/images/userPin.png",
+				icon: "images/userPin.png",
 				title: "Your current location"
 			}); 
 		}

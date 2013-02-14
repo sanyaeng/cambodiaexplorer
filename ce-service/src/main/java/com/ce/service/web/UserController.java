@@ -60,13 +60,6 @@ public class UserController extends BaseController {
 
     private final static Logger     LOG = LoggerFactory.getLogger(UserController.class);
 
-    // @RequestMapping(value = "/logout.html")
-    // public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // SessionManager.removeSession(request, SessionManager.SessionVariables.USER_KEY.toString());
-    //
-    // response.sendRedirect("/");
-    // }
-
     /**
      * Admin login page
      * 
@@ -93,26 +86,6 @@ public class UserController extends BaseController {
         return "login";
     }
 
-    /**
-     * Admin login fail
-     * 
-     * @param request
-     * @param response
-     * @param models
-     * @return
-     */
-    @RequestMapping(value = "/loginfailed.html", method = RequestMethod.GET)
-    public String loginFail(HttpServletRequest request, HttpServletResponse response, Model models) {
-        models.addAttribute("loginfailed", "No user found!");
-        return "login";
-    }
-
-    @ModelAttribute(value = "pagestyle")
-    @Deprecated
-    public String pageStyle() {
-        return "home";
-    }
-
     @RequestMapping(value = "api/addNew", method = {RequestMethod.POST})
     public ResponseEntity<JUser> addNew(HttpServletRequest request, HttpServletResponse response, @ModelAttribute User user) {
         try {
@@ -126,79 +99,13 @@ public class UserController extends BaseController {
         }
     }
 
-    /**
-     * @deprecated
-     * @param request
-     * @param response
-     * @param userName
-     * @param password
-     * @return
-     */
-    @RequestMapping(value = "/userlogin", method = {RequestMethod.POST})
-    public ResponseEntity<JUser> userLogin(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam(value = "username", required = false) String userName,
-            @RequestParam(value = "password", required = false) String password) {
-        User user = (User) userService.loadUserByUsername(userName);// .findByUsername(userName);
-        if (null == user) {
+    @RequestMapping(value = "api/getMe", method = RequestMethod.GET)
+    public ResponseEntity<JUser> getMe(HttpServletRequest request, HttpServletResponse response, Principal principal) {
+        LOG.debug("get current user {}", principal);
+        if (null == principal) {
             return new ResponseEntity<JUser>(HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<JUser>(convert(user), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "api/getMe", method = {RequestMethod.GET})
-    public ResponseEntity<JUser> getMe(HttpServletRequest request, HttpServletResponse response) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (null != user) {
-            return new ResponseEntity<JUser>(convert(user), HttpStatus.OK);
-        }
-        return new ResponseEntity<JUser>(HttpStatus.UNAUTHORIZED);
-    }
-
-    /**
-     * @deprecated
-     * @param request
-     * @param response
-     * @param userName
-     * @param password
-     * @param displayName
-     * @return
-     */
-    @RequestMapping(value = "/signup.html", method = {RequestMethod.POST, RequestMethod.GET})
-    public String signUp(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam(value = "username") String userName, @RequestParam(value = "password") String password,
-            @RequestParam(value = "displayname", required = false) String displayName) {
-        if (!StringUtils.isEmpty(userName) && !StringUtils.isEmpty(password)) {
-            User user = new User();
-            user.setUsername(userName);
-            user.setPassword(password);
-            userDao.persist(user);
-
-            return "newbusiness";
-        }
-        return "signup";
-    }
-
-    /**
-     * @deprecated
-     * @param request
-     * @param response
-     * @param models
-     * @param userName
-     * @param password
-     * @return
-     */
-    @RequestMapping(value = "/business.html", method = RequestMethod.POST)
-    public ResponseEntity<JUser> login(HttpServletRequest request, HttpServletResponse response, Model models,
-            @RequestParam(value = "username", required = true) String userName,
-            @RequestParam(value = "password", required = true) String password) {
-
-        User user = userDao.findByPrimaryKey(userName);
-        String view = "newbusiness";
-        Iterable<BusinessCategory> categories = businessCategoryDao.queryAll();
-        models.addAttribute("businesstype", categories);
-        if (null == user) {
-            return new ResponseEntity<JUser>(new JUser(), HttpStatus.UNAUTHORIZED);
-        }
         return new ResponseEntity<JUser>(convert(user), HttpStatus.OK);
     }
 

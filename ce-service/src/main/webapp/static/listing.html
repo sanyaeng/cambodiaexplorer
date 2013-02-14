@@ -1,42 +1,12 @@
 <div id="business_left">
-	<div id="menubar"></div>
 	<div id="businesslisting">
 		<div id="userbusiness"></div>
 	</div>
 </div>
 
-<div id="openhours" class="openhours" style="">
-	<fieldset>
-		<input type="checkbox" id="monday"/> <label>Monday</label>
-		<input type="text" id="monday_time" value=""/>
-	</fieldset>
-	<fieldset>
-		<input type="checkbox" id="tuesday"/> <label>Tuesday</label>
-		<input type="text" id="tuesday_time" value=""/>
-	</fieldset>
-	<fieldset>
-		<input type="checkbox" id="wednesday"/> <label>Wednesday</label>
-		<input type="text" id="wednes_time" value=""/>
-	</fieldset>
-	<fieldset>
-		<input type="checkbox" id="thursday"/> <label>Thursday</label>
-		<input type="text" id="thursday_time" value=""/>
-	</fieldset>
-	<fieldset>
-		<input type="checkbox" id="friday"/> <label>friday</label>
-		<input type="text" id="friday_time" value=""/>
-	</fieldset>
-	<fieldset>
-		<input type="checkbox" id="saturday"/> <label>Saturday</label>
-		<input type="text" id="saturday_time" value=""/>
-	</fieldset>
-	<fieldset>
-		<input type="checkbox" id="sunday"/> <label>Sunday</label>
-		<input type="text" id="sunday_time" value=""/>
-	</fieldset>
-</div>
 
-<link rel="stylesheet" href="/static/css/businesslisting.css"/>
+
+<link rel="stylesheet" href="css/businesslisting.css"/>
 <script type="text/javascript">
 	var locationList = new Array();
 	function placeAllMarkers() {
@@ -45,7 +15,7 @@
 	function arrangeBusinessListing(jBusinessList) {
 		$.map(jBusinessList, function(jBusiness, i){
 			var category = jBusiness.category;
-			$("<div class='listing_parent' rel='"+ jBusiness.businessId +"' id='item"+jBusiness.businessId+"'>").append($("<div class='businessview'>").append("<div class='name'><span>"+parseInt(i+1)+". </span>"+jBusiness.businessName+"</div>")
+			$("<div class='listing_parent context-menu' data-id='"+ jBusiness.businessId +"' id='item"+jBusiness.businessId+"'>").append($("<div class='businessview'>").append("<div class='name'><span>"+parseInt(i+1)+". </span>"+jBusiness.businessName+"</div>")
 											 							.append("<div class='category'>"+category.catDesc+"</div>")
 											 							.append("<div class='address'>" + jBusiness.businessAddress+"</div>"))
 											 .appendTo($("#userbusiness"));
@@ -58,6 +28,7 @@
 			location.setLocationInfo(info);
 			location.setItemIndex(jBusiness.businessId);
 			locationList.push(location);
+			updateNavMenuList(jBusiness);
 		});
 		//place all markers
 		setTimeout(function(){
@@ -71,26 +42,98 @@
 			showDetails(clone, $(this).attr("rel"));
 			gmap.showBubble($(this).attr("rel"));
 		});
+		$("#user-business-nav-list li:last").remove();//remove the last divider from dropdown business
+		buildContextMenu();
+	}
+	
+	function buildContextMenu() {
+		$.contextMenu({
+	        selector: '.context-menu', 
+	        contextMenuCustomClass: 'dropdown-menu',
+	        build: function($trigger, e) {
+	            // this callback is executed every time the menu is to be shown
+	            // its results are destroyed every time the menu is hidden
+	            // e is the original contextmenu event, containing e.pageX and e.pageY (amongst other data)
+	            return {
+	                callback: function(key, options) {
+	                    var m = "clicked: " + key;
+	                    window.console && console.log(m) || alert(m); 
+	                    console.log($(e.currentTarget).data("id"));
+	                },
+	                items: {
+	                    "Delete": {
+	                    	type:"html", 
+	                    	notSelectable:false, 
+	                    	name: "Delete", 
+	                    	icon: "remove", 
+	                    	childIcon:true, 
+	                    	html: "<a><span class='fam-bin-empty'></span> Delete</a>"
+	                    },
+	                    "sep1": {type:"html", notSelectable:true, childIcon:true, html: "<div class='divider'></div>"},
+	                    "Update": {type:"html", notSelectable:false,  name: "Update", icon: "edit", childIcon:true, html: "<a href='javascript:updateItem()'><span class='fam-page-edit'></span> Update</a>"},
+	                    "sep2": {type:"html", notSelectable:true, childIcon:true, html: "<div class='divider'></div>"},
+	                    "Add Details": {type:"html", notSelectable:false,  name: "AddDetail", icon: "details", childIcon:true, html: "<a><span class='fam-table-add'></span> Add Detail</a>"},
+	                    "sep3": {type:"html", notSelectable:true,  childIcon:true, html: "<div class='divider'></div>"},
+	                    "Update Details": {type:"html", notSelectable:false, name: "UpdateDetail", icon: "update", childIcon:true, html: "<a><span class='fam-table-edit'></span> Update Details</a>"},
+	                    
+	                }
+	            };
+	        }
+	    });
+	}
+	
+	function updateItem(itemId) {
+		alert(itemId);
+	}
+	
+	function updateNavMenuList(jBusiness) {
+		$("#user-business-nav-list").append("<li class='dropdown-submenu' id='drown_"+jBusiness.id+"'>"+
+												"<a tabindex='-1' href='#'><span class='fam-cog'></span> " + jBusiness.businessName + "</a>"+
+												"<ul class='dropdown-menu' id='user-business-nav-list'>"+
+													"<li><a><span class='fam-bin-empty'></span> Delete</a></li><li><div class='divider'></li>"+
+													"<li><a><span class='fam-page-edit'></span> Update</a></li><li><div class='divider'></li>"+
+													"<li><a><span class='fam-table-add'></span> Add Detail</a></li><li><div class='divider'></li>"+
+													"<li><a><span class='fam-table-edit'></span> Update Details</a></li>"+
+												"</ul>"+
+											"</li>"+
+											"<li><div class='divider'></li>");
 	}
 	
 	function showDetails(clonedElement, id) {
-		//var clonedElement = clonedElement.append("<input type='hidden' value='"+ id + "' id=\'buzId\'/>");
 		$("#details_container").data("buzId", id);
-		if($("#details_container").is(":visible")) {
-			$("#details_container").children().children().children().hide();
-			$("#details_container").children().children(":first").html(clonedElement);
-			$("#details_container").children().children().children().effect("slide", {direction: "right"}, 200);
+		//Need to re-do this code..... looks dump
+		if($("#detailScroller").is(":visible") && $("#detailScroller").children().length > 0) {
+			$("#detailScroller").children().children().hide();
+			$("#detailScroller").children().html(clonedElement);
+			$("#detailScroller").children().children().effect("slide", {direction: "right"}, 200);
 		}
 		else {
-			$("#details_container").toggle("drop", {direction: "down"}, 100,function(){
-				var details = $("<div class='details'>").append(clonedElement);
-				$(this).children().html("");
-				$(this).children().append(details);
-			});
+			$("#detailWrapper").show();
+			if($("#detailScroller").children().length == 0) {
+				$("#detailScroller").toggle("slide", {direction: "right"}, 100,function(){
+					var details = $("<div class='details'>").append(clonedElement);
+					$(this).html("");
+					$(this).append(details);
+					//$(this).css("display", "block");
+				});
+			}
+			else {
+				$("#detailScroller").children().children().hide();
+				$("#detailScroller").children().html(clonedElement);
+				$("#detailScroller").children().children().effect("slide", {direction: "right"}, 200, function(){
+					$("#detailScroller").css("display", "block");
+				});
+			}
+			
+			
 		}
 		
+		$("#details_container").css("height", $("#detailWrapper").height() - $("#detailNav").height() + "px");
 		//
-		detailScroll = new iScroll("details_container");
+		setTimeout(function(){
+			detailScroll = new iScroll("details_container");
+			//detailScroll.refresh();
+		}, 200);
 	}
 	function getOpenHour() {
 		var monday = $("#monday_time").val();

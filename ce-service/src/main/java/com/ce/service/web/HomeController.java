@@ -29,7 +29,7 @@ public class HomeController extends CambodiaExplorerController {
     /**
      * Simply selects the home view to render by returning its name.
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/old", method = RequestMethod.GET)
     public String home(HttpServletRequest request, HttpServletResponse response, Model models, Principal principl) {
         logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>> Welcome home! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         // models.addAttribute("categories", EntityHelper.getAllCategory());

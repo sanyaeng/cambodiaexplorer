@@ -1,39 +1,46 @@
-<link rel="stylesheet" href="/static/css/main.css"/>
-<div id="businessbody">
-	<div id="header" class="header inf_header">Business Information</div>
-	<div id="menubar" class="menubar">
-		<!-- CRUD menu here -->
-		<div class="menu_container">
-			<div id="create" class="menu_item"><img src="static/css/img/create.png" onclick="loadNewBusiness();"/></div>
-			<div id="update" class="menu_item"><img src="static/css/img/update.png" onclick="loadUpdate();"/></div>
-			<div id="update" class="menu_item"><img src="static/css/img/detail.png" onclick="loadDetail();"/></div>
-			<div id="delete" class="menu_item" style="float:right;"><img src="static/css/img/delete_bin.png"/></div>
+<div class="row-fluid">
+	<div class="span4">
+		<div id="businessbody">
+			<!-- 
+			<div id="menubar" class="menubar">
+				<div class="menu_container">
+					<div id="create" class="menu_item"><img src="css/img/create.png" onclick="loadNewBusiness();"/></div>
+					<div id="update" class="menu_item"><img src="css/img/update.png" onclick="loadUpdate();"/></div>
+					<div id="update" class="menu_item"><img src="css/img/detail.png" onclick="loadDetail();"/></div>
+					<div id="delete" class="menu_item" style="float:right;"><img src="css/img/delete_bin.png"/></div>
+				</div>
+			</div> -->
+			<div id="navWrapper"></div>
 		</div>
 	</div>
-	<div id="navWrapper"></div>
-</div>
-<div class="map" id="map" style="height: 900px;">
-	<div id="header" class="header map_header">Business Location</div>
-	<div style="width:100%;height:100%;">
-		<div class="mapcanvas" id="mapcanvas" style="width:100%; height:100%"></div>
-	</div>
-	<div id="details_container" class="detailscontainer">
-		<div id="detailScroller">
-			<!-- <div id="details" class="details"></div> -->
+	<div class="span8">
+		<div class="map" id="map">
+			<div style="position: fixed; width: 64.3%; height: 94%;">
+				<div class="mapcanvas" id="mapcanvas" style="width:100%; height:100%;"></div>
+			</div>
+			<div id="detailWrapper" class="detailscontainer">
+				<div id="details_container">
+					<div id="detailScroller" style="display:none;">
+						<!-- <div id="details" class="details"></div> -->
+					</div>
+				</div>
+				<div id="detailNav" class="detailNav" style="height: 36px;">
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
+
 <!-- In-line script. Should it be move to static file??? -->
-<script type="text/javascript" src="/static/js/utils/business.js"></script>
-<!-- <script type="text/javascript" src="/static/js/utils/items.js"></script> -->
-<script type="text/javascript" src="/static/js/utils/collection.js"></script>
-<script type="text/javascript" src="/static/js/infobubble.js"></script>
-<script type="text/javascript" src="/static/js/utils/map.js"></script>
-<script type="text/javascript" src="/static/js/utils/location.js"></script>
-<script type="text/javascript" src="/static/js/main.js"></script>
-<script type="text/javascript" src="/static/js/logout.js"></script>
-<script type="text/javascript" src="/static/js/jquery.ui.effect-slide.js"></script>
-<script type="text/javascript" src="/static/js/jquery.iframe-post-form.js"></script>
+<script type="text/javascript" src="js/utils/business.js"></script>
+<script type="text/javascript" src="js/utils/collection.js"></script>
+<script type="text/javascript" src="js/infobubble.js"></script>
+<script type="text/javascript" src="js/utils/map.js"></script>
+<script type="text/javascript" src="js/utils/location.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/logout.js"></script>
+<script type="text/javascript" src="js/jquery.ui.effect-slide.js"></script>
+<script type="text/javascript" src="js/jquery.iframe-post-form.js"></script>
 <script type="text/javascript">
 var scrollContent,
     scrollNav,
@@ -45,11 +52,12 @@ var detailLoaded = false;
 document.body.addEventListener("click", function(e) {
 	if("detailscontainer" != e.target.className && e.target.className != "moredetails" && (e.target.className != "details" && "moredetails" != e.target.parentNode.className) && "update" != e.target.parentNode.id && "businessview" != e.target.parentNode.className && "listing_parent" != e.target.parentNode.className) {
 		//close all popup and slide element
-		if($("#details_container").is(":visible")) {
+		if($("#detailWrapper").is(":visible")) {
 			$(".item_selected").removeClass("item_selected");
-			$("#details_container").toggle("drop", {direction: "down"}, 200, function(){
+			$("#detailWrapper").toggle("drop", {direction: "down"}, 200, function(){
 				$(this).css("height", "130px");
 				resetDetail();
+				$("#detailScroller").html("");
 			});
 		}
 		detailLoaded = false;
@@ -58,11 +66,13 @@ document.body.addEventListener("click", function(e) {
 });
 
 function resetDetail() {
-	var top = $(window).height() - ($("#details_container").height() + $(".footer").height() + 5);
-	$("#details_container").css({
+	var top = $(window).height() - ($("#detailWrapper").height() + $(".footer").height() + 5);
+	$("#detailWrapper").css({
 		"top": top + "px",
 		"width": $("#map").width() - 20 + "px",
 	});
+	
+	$("#details_container").css("height", $("#detailWrapper").height() - $("#detailNav").height() + "px");
 }
 
 /**
@@ -75,10 +85,11 @@ $(function() {
 	//retreive the business listing. if the user doesn't hav any listing, load the new business page into the navWrapper
 	businessObj.getAllBusiness(loadBusiness);
 	//display the user's login name on the footer
+	/*
 	user.getUserLogin(function(userLogin){
 		sessionStorage.setItem("user", JSON.stringify(userLogin));
 		$("#logged_user").text(userLogin.displayName);
-	});
+	});*/
 	setTimeout(function() {
 		resetDetail();
 	}, 1500);
@@ -113,6 +124,7 @@ function getAvailableScrollingHeight(navigationWrapper) {
  */
 function loadBusiness(listing) {
 	if(listing != undefined && listing.length > 0) {
+		$("#user-business").removeClass("hide");
 		//load the business listing page and re-organize the view
 		loadListing(listing);
 	}
@@ -127,9 +139,6 @@ function loadBusiness(listing) {
  * If the businessId is provided, it will consider as the update
  */
 function loadNewBusiness(businessId) {
-	if(scrollNav != undefined) {
-		scrollNav.destroy();
-	}
 	var item;
 	if(businessId != undefined) {
 		var b = $("#item"+businessId).data("business");
@@ -144,7 +153,7 @@ function loadNewBusiness(businessId) {
  * Load the business page
  */
 function loadNewBusinessPage(businessItem) {
-	$("#navWrapper").load("/static/newbusiness.html", function(){
+	$("#navWrapper").load("newbusiness.html", function(){
 		$("#menubar").hide();
 		//new business loading complete here
 		setTimeout(function(){
@@ -167,17 +176,11 @@ function loadNewBusinessPage(businessItem) {
 			document.getElementById("file_upload").addEventListener("change", function(){
 				uploadImage();
 			}, false);
-			getAvailableScrollingHeight($("#navWrapper"));
-			if(isTouchDevice()){
-				scrollNav = new iScroll('navWrapper');
-			}
 			if(businessItem != undefined) {
-				//Start to arrange item in its possition
 				arrangBusinessItem(businessItem);
 			}
 		}, 200);
 		navigator.geolocation.getCurrentPosition(updLocation, failRefreshMap, {enableHighAccuracy: true});
-		//gmap.refresh();
 	});
 }
 
@@ -185,24 +188,18 @@ function loadNewBusinessPage(businessItem) {
  * Load the listing page
  */
 function loadListing(listing) {
-	if(scrollNav != undefined) {
-		scrollNav.destroy();
-	}
-	$("#navWrapper").load("/static/listing.html", function(){
+	$("#navWrapper").load("listing.html", function(){
 		//load complete start here
 		setTimeout(function() {
 			$("#menubar").show();
 			//
-			getAvailableScrollingHeight($("#navWrapper"));
+			//getAvailableScrollingHeight($("#navWrapper"));
 			arrangeBusinessListing(listing);
 			setTimeout(function(){
 				$("#menubar").css({
 					"width": $("#business_left").width() + "px",
 				});
 			}, 150);
-			if(isTouchDevice()){
-				scrollNav = new iScroll('navWrapper');
-			}
 		}, 200);
 	});
 }
@@ -212,35 +209,28 @@ function loadListing(listing) {
  * If there no any selected element, alert a lovely message to the user to select an element to be updated
  */
 function loadUpdate() {
-	if(!$("#details_container").is(":visible")) {
+	if(!$("#detailWrapper").is(":visible")) {
 		alert("Please select an item to update!!!!");
 	}
 	else {
 		//reset the map to
 		navigator.geolocation.getCurrentPosition(refreshMapPosition, failRefreshMap, {enableHighAccuracy: true});
-		
 		loadNewBusiness($("#buzId").val());
-		//animate the detail container to be a bigger size //should be animate detail view
-		/*
-		$("#details_container").animate({
-			top: $("#navWrapper").offset().top,
-			bottom: 0,
-			height: $("#navWrapper").height() -5 + "px" //make available space at the bottom of the container 5px
-		});*/
 	}
 }
 
 function loadDetail() {
-	if(!$("#details_container").is(":visible")) {
+	if(!$("#detailWrapper").is(":visible")) {
 		alert("Please select an item to update!!!!");
 	}
 	else {
 		
-		$("#details_container").animate({
+		$("#detailWrapper").animate({
 			top: $("#navWrapper").offset().top,
 			bottom: 0,
 			height: $("#navWrapper").height() -5 + "px" //make available space at the bottom of the container 5px
 		}, pushDetailBlock);
+		$("#details_container").css("height", $("#detailWrapper").height() - $("#detailNav").height() + "px");
 	}
 }
 
@@ -250,23 +240,16 @@ function addDetailElement(detail) {
 
 function addDetailLink(businessId) {
 	//push a link for user to add the details
-	//$("#ajaxloader").hide();
-	var link = $("<br/><a class='btn' onclick='newDetail();'> Add Details </a>");
+	var link = $("<br/><a class='btn' onclick='loadNewDetail();'> Add Details </a>");
 	$(".details .businessview").append(link);
 	$("#contact_details").hide("drop", function(){
 		$(this).remove();
-		
-	$("#contact_details").remove();
+		$("#contact_details").remove();
 	});
-	detailScroll.refresh();
-	
 }
 
-function newDetail() {
-	var openHours = $("#openhours");
-	$("#details_container").children().append(openHours);
-	openHours.effect("slide", {direction: "right"}, 100);
-	detailScroll.refresh();
+function loadNewDetail() {
+	$("#detailScroller").load("newbusinessdetail.html", function(){detailScroll.refresh();});
 }
 
 function pushDetailBlock() {
@@ -276,6 +259,7 @@ function pushDetailBlock() {
 		$("#contact_details").effect("slide", {direction: "right"}, 100);
 	}
 	businessObj.getDetail(id, function(detail){addDetailElement(detail);}, function(){addDetailLink(id)});
+	$("#details_container").css("height", $("#detailWrapper").height() - $("#detailNav").height() + "px");
 	detailLoaded = true;
 }
 function refreshMapPosition(p) {
