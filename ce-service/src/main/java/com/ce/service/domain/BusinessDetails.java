@@ -37,6 +37,12 @@ public class BusinessDetails extends AbstractLongEntity {
     @Basic
     private List<String>      openHours;
 
+    @Basic
+    private List<String>      specialities;
+
+    @Basic
+    private List<String>      services;
+
     /**
      * @return the openHours
      */
@@ -110,6 +116,36 @@ public class BusinessDetails extends AbstractLongEntity {
      */
     public void setImageUrls(List<String> imageUrls) {
         this.imageUrls = imageUrls;
+    }
+
+    /**
+     * @return the specialities
+     */
+    public List<String> getSpecialities() {
+        return specialities;
+    }
+
+    /**
+     * @param specialities
+     *            the specialities to set
+     */
+    public void setSpecialities(List<String> specialities) {
+        this.specialities = specialities;
+    }
+
+    /**
+     * @return the services
+     */
+    public List<String> getServices() {
+        return services;
+    }
+
+    /**
+     * @param services
+     *            the services to set
+     */
+    public void setServices(List<String> services) {
+        this.services = services;
     }
 
 }

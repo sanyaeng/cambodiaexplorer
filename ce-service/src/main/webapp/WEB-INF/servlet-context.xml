@@ -77,12 +77,6 @@
         </property>
     </bean>
      -->
-    <!-- <bean id="dataStoreFactory" class="com.google.appengine.api.datastore.DatastoreServiceFactory"/> -->
-    
-    <bean id="entityInitializer" class="com.ce.service.utils.EntityInitializer" init-method="init">
-    	<property name="entities" ref="entities"/>
-    </bean>
-    
     <bean id="localeChangeInterceptor"
 		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
 		<property name="paramName" value="lang" />
@@ -121,4 +115,5 @@
 	<!-- Imports entities beans -->
 	<import resource="classpath:/entities.xml"/>
 	
+	<bean id="businessCategoryDao" class="com.ce.service.dao.BusinessCategoryDaoBean" init-method="init"/>
 </beans>

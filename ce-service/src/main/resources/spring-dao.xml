@@ -20,8 +20,7 @@
 	</bean>
 	<bean id="communicationTypeDao" class="com.ce.service.dao.CommunicationTypeDaoBean">
 	</bean>
-	<bean id="businessCategoryDao" class="com.ce.service.dao.BusinessCategoryDaoBean">
-	</bean>
+
 	<bean id="detailDao" class="com.ce.service.dao.BusinessDetailsDaoBean"/>
 	
 

@@ -2,7 +2,7 @@
 	(function(){
 		var BusinessDetail = function() {
 			var that = this;
-			that.detailUrl = "http://" + location.host + "/api/businessDetail";
+			that.detailUrl = "http://" + location.host + "/businessDetail/api/v10";
 		};
 		BusinessDetail.prototype = {
 			getDetail: function(businessId, success, fail){
@@ -25,6 +25,13 @@
 			},
 			addDetail: function(detail, success, fail) {
 				var that = this;
+				$.post(that.detailUrl + "/add", detail, function(data, textStatus, jqXHR){
+					if(typeof success === 'function') {
+						success(data);
+					}
+				}).fail(function(){
+					alert("Adding detail fail!!!");
+				});
 				
 			},
 		};
@@ -33,8 +40,7 @@
 	})();
 	var Business = function() {
 		var that = this;
-		that.businessUrl = "http://" + location.host + "/business/";
-		//that.businessDetailUrl = "http://" + location.host + "/api/businessDetail";
+		that.businessUrl = "http://" + location.host + "/business/api/v10";
 		that.detail = new BusinessDetail();
 	};
 	Business.prototype = {
@@ -42,7 +48,7 @@
 			var that = this;
 			var categories;
 			$.ajax({
-				url: that.businessUrl + "allCategories",
+				url: that.businessUrl + "/allCategories",
 				type: "GET",
 				dataType: "json",
 				success: function(businessCats) {
@@ -55,7 +61,7 @@
 		addNew: function(businessData, callback) {
 			var that = this;
 			$.ajax({
-				url: that.businessUrl + "api/addNewBusiness",
+				url: that.businessUrl + "/addNewBusiness",
 				type: "POST",
 				dataType: "json",
 				data: businessData,
@@ -71,7 +77,7 @@
 		getAllBusiness: function(callback) {
 			var that = this;
 			$.ajax({
-				url: that.businessUrl + "api/getAllUserBusiness",
+				url: that.businessUrl + "/getAllUserBusiness",
 				type: "GET",
 				dataType: "json",
 				success: function(listing) {
@@ -85,7 +91,7 @@
 		getBusiness: function(id, callback) {
 			var that = this;
 			$.ajax({
-				url: that.businessUrl + "api/getUserBusiness",
+				url: that.businessUrl + "/getUserBusiness",
 				type: "GET",
 				dataType: "json",
 				data: {"id": id},
@@ -99,9 +105,14 @@
 				}
 			});
 		},
+		//Business Detail Action
 		getDetail: function(detail, callBack, failCallback) {
 			var that = this;
 			that.detail.getDetail(detail, callBack, failCallback);
+		},
+		addDetail: function(detail, callBack) {
+			var that = this;
+			that.detail.addDetail(detail, callBack);
 		},
 	};
 	if (typeof exports !== 'undefined') exports.Business = Business;

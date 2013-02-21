@@ -25,12 +25,10 @@ import com.ce.service.dao.BusinessCategoryDao;
 import com.ce.service.dao.BusinessDao;
 import com.ce.service.domain.Business;
 import com.ce.service.domain.BusinessCategory;
-import com.ce.service.domain.User;
 import com.ce.service.json.JBussiness;
 import com.ce.service.json.JBussinessCategory;
 import com.ce.service.model.OpenHours;
 import com.ce.service.utils.CambodiaExplorerService;
-import com.ce.service.utils.SessionManager;
 
 /**
  * Concrete Controller related to entity Business.
@@ -50,49 +48,7 @@ public class BusinessController {// extends GeneratedBusinessController {
     @Autowired
     CambodiaExplorerService cambodiaExplorerService;
 
-    /**
-     * @deprecated use api/addNewBusiness instead
-     * @param request
-     * @param response
-     * @param models
-     * @param category
-     * @param lat
-     * @param lon
-     * @param business
-     * @param businessDescription
-     * @param businessaddress
-     */
-    @RequestMapping(value = "/addnewbusiness.html", method = RequestMethod.POST)
-    public void addBusiness(HttpServletRequest request, HttpServletResponse response, Model models,
-            @RequestParam(value = "businesstype", required = true) String category,
-            @RequestParam(value = "lat", required = true) String lat, @RequestParam(value = "lon", required = true) String lon,
-            @RequestParam(value = "business", required = true) String business,
-            @RequestParam(value = "businessDescription", required = false) String businessDescription,
-            @RequestParam(value = "businessaddress", required = false) String businessaddress) {
-
-        Business bus = new Business();
-        // bus.setBusinessCategory(busCatDao.findByPrimaryKey(category));
-        bus.setLattitue(lat);
-        bus.setLongitute(lon);
-        bus.setBusinessName(business);
-        bus.setBusinessDescription(businessDescription);
-        bus.setBusinessLongAddress(businessaddress);
-        User user = (User) SessionManager.getAttribute(request, SessionManager.SessionVariables.USER_KEY.toString());
-
-        // bus.setUserKey(user.getPrimaryKey());
-        this.businessDao.persist(bus);
-
-        try {
-            response.sendRedirect("businesslisting.html");
-        }
-        catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        // return "businessList";
-    }
-
-    @RequestMapping(value = "api/addNewBusiness", method = RequestMethod.POST)
+    @RequestMapping(value = "api/v10/addNewBusiness", method = RequestMethod.POST)
     public ResponseEntity<JBussiness> addNewBusiness(HttpServletRequest request, HttpServletResponse response,
             Principal principl, @ModelAttribute(value = "business") Business business,
             @RequestParam(value = "openTime[]", required = false) String[] openTime,
@@ -110,20 +66,14 @@ public class BusinessController {// extends GeneratedBusinessController {
 
     }
 
-    @RequestMapping(value = "businesslisting.html", method = RequestMethod.GET)
-    public String businessListing(HttpServletRequest request, HttpServletResponse response, Model models) {
-        // models.addAttribute("businesses", businesses);
-        return "businesslisting";
-    }
-
-    @RequestMapping(value = "api/getAllUserBusiness", method = RequestMethod.GET)
+    @RequestMapping(value = "api/v10/getAllUserBusiness", method = RequestMethod.GET)
     public ResponseEntity<List<JBussiness>> getAllBusinesses(HttpServletRequest req, HttpServletResponse res, Principal principal) {
 
         Iterable<Business> businesses = this.businessDao.queryByUsername(principal.getName());
         return new ResponseEntity<List<JBussiness>>(this.convert(businesses), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "api/getUserBusiness", method = RequestMethod.GET)
+    @RequestMapping(value = "api/v10/getUserBusiness", method = RequestMethod.GET)
     public ResponseEntity<JBussiness> getBusiness(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(value = "id", required = true) long id, Principal principal) {
         Business business = this.businessDao.findByPrimaryKey(id);
@@ -137,7 +87,7 @@ public class BusinessController {// extends GeneratedBusinessController {
         return new ResponseEntity<JBussiness>(this.convert(business), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/allCategories", method = RequestMethod.GET)
+    @RequestMapping(value = "api/v10/allCategories", method = RequestMethod.GET)
     public ResponseEntity<List<JBussinessCategory>> getAllBusinessCategories() {
         List<JBussinessCategory> categories = cambodiaExplorerService.getAllBusinessCategory();
         return new ResponseEntity<List<JBussinessCategory>>(categories, HttpStatus.OK);

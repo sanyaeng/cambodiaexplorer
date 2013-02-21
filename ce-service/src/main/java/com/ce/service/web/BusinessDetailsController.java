@@ -10,11 +10,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mortbay.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,30 +30,44 @@ import com.ce.service.json.JBusinessDetails;
  * 
  */
 @Controller
-@RequestMapping(value = "/api/businessDetail")
+@RequestMapping(value = "businessDetail")
 public class BusinessDetailsController {
+    private final static Logger LOG = LoggerFactory.getLogger(BusinessDetailsController.class);
 
     @Autowired
-    private BusinessDetailsDao detailDao;
+    private BusinessDetailsDao  detailDao;
 
-    @RequestMapping(value = "add", method = RequestMethod.POST)
+    @RequestMapping(value = "api/v10/add", method = RequestMethod.POST)
     public ResponseEntity<JBusinessDetails> add(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam(value = "payment") String[] payment, @RequestParam(value = "imgUrl") String[] imgUrls,
-            BusinessDetails details) {
+            @RequestParam(value = "ajaxPayment[]", required = false) String[] ajaxPayment,
+            @RequestParam(value = "ajaxImgUrls[]", required = false) String[] ajaxImgUrls,
+            @RequestParam(value = "ajaxSpecialities[]", required = false) String[] ajaxSpecialities,
+            @RequestParam(value = "ajaxServices[]", required = false) String[] ajaxServices,
+            @RequestParam(value = "ajaxOpenHours[]", required = false) String[] ajaxOpenHours,
+            @ModelAttribute BusinessDetails details) {
 
-        if (null != payment) {
-            details.setPaymentAccepted(Arrays.asList(payment));
+        LOG.debug("ajaxPayment leng {}", ajaxPayment.length);
+
+        if (null != ajaxPayment) {
+            details.setPaymentAccepted(Arrays.asList(ajaxPayment));
         }
-
-        if (null != imgUrls) {
-            details.setImageUrls(Arrays.asList(imgUrls));
+        if (null != ajaxOpenHours) {
+            details.setOpenHours(Arrays.asList(ajaxOpenHours));
         }
-
+        if (null != ajaxSpecialities) {
+            details.setSpecialities(Arrays.asList(ajaxSpecialities));
+        }
+        if (null != ajaxImgUrls) {
+            details.setImageUrls(Arrays.asList(ajaxImgUrls));
+        }
+        if (null != ajaxServices) {
+            details.setServices(Arrays.asList(ajaxServices));
+        }
         detailDao.persist(details);
         return new ResponseEntity<JBusinessDetails>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "detail", method = RequestMethod.GET)
+    @RequestMapping(value = "api/v10/detail", method = RequestMethod.GET)
     public ResponseEntity<JBusinessDetails> getDetail(HttpServletRequest request, HttpServletResponse response,
             @RequestParam Long id) {
         BusinessDetails detail = detailDao.findByPrimaryKey(id);
@@ -61,7 +77,7 @@ public class BusinessDetailsController {
         return new ResponseEntity<JBusinessDetails>(convert(detail), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "detail", method = RequestMethod.GET, params = {"businessId"})
+    @RequestMapping(value = "api/v10/detail", method = RequestMethod.GET, params = {"businessId"})
     public ResponseEntity<List<JBusinessDetails>> getDetails(HttpServletRequest request, HttpServletResponse response,
             @RequestParam Long businessId) {
         Iterable<BusinessDetails> detail = detailDao.queryByBusinessId(businessId);

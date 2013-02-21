@@ -3,16 +3,157 @@
 		<div id="userbusiness"></div>
 	</div>
 </div>
-
-
+<div id="addDetailModal" class="modal hide fade in">
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3>Add Details</h3>
+	</div>
+	<div class="modal-body" id="modal-body-detail-container">
+		<div id="other-payment" class="modal-body-slide-down hide">
+			<div class="modal-body">
+				<label for="new-payment-method">Other Payment Method</label>
+				<input type="text" id="new-payment-method" value="" style="width:97.4%;" placeholder="Payment accepted (comma separated for multiple)...">
+			</div>
+			<div class="modal-footer">
+				<a class="btn btn-success btn-small" onclick="appendPaymentAccept();">Add New Payment</a>
+				<a class="btn btn-cancel btn-small" onclick="afterOtherPaymentAdded();">Cancel</a>
+			</div>
+		</div>
+		<div>
+			<div class="addPhotoLink" style="">Upload Business Photo</div>
+		</div>
+		<div class="divider horiziontal-divider"></div>
+		<div>
+			<label class="" for="more-info">More Information</label>
+			<textarea id="more-info" class="tiny-mce" cols="40"></textarea>
+		</div>
+		<div class="divider horiziontal-divider"></div>
+		<div>
+			<label class="" for="subsetDescription">Open Hours</label>
+			<div class="modal-input">
+				<div class="col2" id="left-col" style="">
+					<div>
+						<input type="checkbox" value="moday" id="chk-monday" class="pull-left"><span><label for="chk-monday">Monday</label></span>
+						<input class="modal-input clearfix" type="text" id="input-monday" value="" placeholder="From - To">
+					</div>
+					<div>
+						<input type="checkbox" value="tuesday" id="chk-tuesday" class="pull-left"><span><label for="chk-tuesday">Tuesday</label></span>
+						<input class="modal-input clearfix" type="text" id="input-tuesday" value="" placeholder="From - To">
+					</div>
+					<div>
+						<input type="checkbox" value="wednesday" id="chk-wednesday" class="pull-left"><span><label for="chk-wednesday">Wednesday</label></span>
+						<input class="modal-input clearfix" type="text" id="input-wednesday" value="" placeholder="From - To">
+					</div>
+					<div>
+						<input type="checkbox" value="thursday" id="chk-thursday" class="pull-left"><span><label for="chk-thursday">Thursday</label></span>
+						<input class="modal-input clearfix" type="text" id="input-thursday" value="" placeholder="From - To">
+					</div>
+				</div>
+				<div class="col2" id="right-col" style="">
+					<div>
+						<input type="checkbox" value="friday" id="chk-friday" class="pull-left"><span><label for="chk-friday">Friday</label></span>
+						<input class="modal-input clearfix" type="text" id="input-friday" value="" placeholder="From - To">
+					</div>
+					<div>
+						<input type="checkbox" value="saturday" id="chk-saturday" class="pull-left"><span><label for="chk-saturday">Saturday</label></span>
+						<input class="modal-input clearfix" type="text" id="input-saturday" value="" placeholder="From - To">
+					</div>
+					<div>
+						<input type="checkbox" value="sunday" id="chk-sunday" class="pull-left"><span><label for="chk-sunday">Sunday</label></span>
+						<input class="modal-input clearfix" type="text" id="input-sunday" value="" placeholder="From - To">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="divider horiziontal-divider"></div>
+		<div>
+			<label for="specialities">Specialities</label>
+			<div>
+				<input type="text" id="specialities" value="" style="width:97.4%;" placeholder="The company's specialities...">
+			</div>
+		</div>
+		<div class="divider horiziontal-divider"></div>
+		<div>
+			<label for="services">Services</label>
+			<div>
+				<input type="text" id="services" value="" style="width:97.4%;" placeholder="The company's services...">
+			</div>
+		</div>
+		<div class="divider horiziontal-divider"></div>
+		<div id="payment-accepted">
+			<label for="payment-accepted">Payment Accepted</label>
+			<div class="modal-input">
+				<div class="col2" id="left-col">
+					<div>
+						<input type="checkbox" id="payment-cash" data-payment="Cash" class="pull-left" checked><span><label for="payment-cash">Cash</label></span>
+					</div>
+					<div>
+						<input type="checkbox" id="payment-master-card" data-payment="Master Card" class="pull-left"><span><label for="payment-master-card">Master Card</label></span>
+					</div>
+					<div>
+						<a id="other-payment-type" onclick="showOtherPayment();">Other Payment Type</a>
+					</div>
+				</div>
+				<div class="col2" id="right-col">
+					<div>
+						<input type="checkbox" id="payment-credit-card" data-payment="Credit Card" class="pull-left"><span><label for="payment-credit-card">Credit Card</label></span>
+					</div>
+					<div>
+						<input type="checkbox" id="payment-visa-card" data-payment="Visa Card" class="pull-left"><span><label for="payment-visa-card">Visa Card</label></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<a class="btn btn-success btn-create" onclick="saveDetail();">Save</a>
+	</div>
+</div>
 
 <link rel="stylesheet" href="css/businesslisting.css"/>
 <script type="text/javascript">
 	var locationList = new Array();
+	var selectedId;
+	function appendPaymentAccept() {
+		var payment = $("#new-payment-method").val(),
+			paymentList;
+		if(payment != "") {
+			paymentList = payment.split(",");
+		}
+		for(i in paymentList) {
+			var leftSide = $("#payment-accepted .modal-input > div#left-col"),
+				rightSide = $("#payment-accepted .modal-input > div#right-col"),
+				leftChildCount = leftSide.children().length,
+				rightChildCount = rightSide.children().length;
+			//picking the correct side to append the new payment method
+			//if the left side contains more item than the right side, append the new one to the right
+			//if the both side are equal append to the left
+			var newPayment = $("<div><input checked type='checkbox' data-payment='"+paymentList[i]+"' id='payment-"+paymentList[i].replace(new RegExp(" ", "g"), "-")+"' class='pull-left'><label for='payment-"+paymentList[i].replace(new RegExp(" ", "g"), "-")+"'>"+paymentList[i]+"</label>")
+			if(leftChildCount <= rightChildCount) {
+				newPayment.insertBefore(leftSide.find("div:last"));
+			}
+			else {
+				rightSide.append(newPayment);
+			}
+		}
+		afterOtherPaymentAdded();
+	}
+	function afterOtherPaymentAdded() {
+		$('#other-payment').slideUp('fast');
+		var to = $("#other-payment-type").offset().top;
+		$('#modal-body-detail-container').scrollTop(to);
+		$("#new-payment-method").val("");
+	}
+	function showOtherPayment() {
+		$('#modal-body-detail-container').scrollTop(0);
+		$("#other-payment").slideDown();
+	}
 	function placeAllMarkers() {
 		gmap.placeAllMarkers(locationList);
 	}
 	function arrangeBusinessListing(jBusinessList) {
+		//create the popover for the other payment 
+		
 		$.map(jBusinessList, function(jBusiness, i){
 			var category = jBusiness.category;
 			$("<div class='listing_parent context-menu' data-id='"+ jBusiness.businessId +"' id='item"+jBusiness.businessId+"'>").append($("<div class='businessview'>").append("<div class='name'><span>"+parseInt(i+1)+". </span>"+jBusiness.businessName+"</div>")
@@ -36,14 +177,29 @@
 		}, 500);
 		
 		$(".listing_parent").live("click", function(){
-			$(".item_selected").removeClass("item_selected");
 			var clone = $(this).children().clone();
-			$(this).addClass("item_selected");
-			showDetails(clone, $(this).attr("rel"));
 			gmap.showBubble($(this).attr("rel"));
 		});
 		$("#user-business-nav-list li:last").remove();//remove the last divider from dropdown business
 		buildContextMenu();
+	}
+	function handleContextMenuAction(actionKey, id) {
+		switch (actionKey) {
+			case "Delete":
+				business.deleteItem(id, function(o) {
+					
+				});
+				break;
+			case "Update":
+				loadNewBusiness(id);
+				break;
+			case "Add Details":
+				//load add detail page
+				break;
+			case "Update Details":
+				//load update detail
+				break;
+		}
 	}
 	
 	function buildContextMenu() {
@@ -57,8 +213,8 @@
 	            return {
 	                callback: function(key, options) {
 	                    var m = "clicked: " + key;
-	                    window.console && console.log(m) || alert(m); 
-	                    console.log($(e.currentTarget).data("id"));
+	                    selectedId = $(e.currentTarget).data("id");
+	                    handleContextMenuAction(key, selectedId);
 	                },
 	                items: {
 	                    "Delete": {
@@ -67,14 +223,35 @@
 	                    	name: "Delete", 
 	                    	icon: "remove", 
 	                    	childIcon:true, 
-	                    	html: "<a><span class='fam-bin-empty'></span> Delete</a>"
+	                    	html: "<a><span class='fam-bin-empty'></span> Delete</a>",
 	                    },
 	                    "sep1": {type:"html", notSelectable:true, childIcon:true, html: "<div class='divider'></div>"},
-	                    "Update": {type:"html", notSelectable:false,  name: "Update", icon: "edit", childIcon:true, html: "<a href='javascript:updateItem()'><span class='fam-page-edit'></span> Update</a>"},
+	                    "Update": {
+	                    	type:"html", 
+	                    	notSelectable:false, 
+	                    	name: "Update", 
+	                    	icon: "edit", 
+	                    	childIcon:true, 
+	                    	html: "<a><span class='fam-page-edit'></span> Update</a>"
+	                    },
 	                    "sep2": {type:"html", notSelectable:true, childIcon:true, html: "<div class='divider'></div>"},
-	                    "Add Details": {type:"html", notSelectable:false,  name: "AddDetail", icon: "details", childIcon:true, html: "<a><span class='fam-table-add'></span> Add Detail</a>"},
+	                    "Add Details": {
+	                    	type:"html", 
+	                    	notSelectable:false, 
+	                    	name: "AddDetail", 
+	                    	icon: "details", 
+	                    	childIcon:true, 
+	                    	html: "<a data-toggle='modal' href='#addDetailModal'><span class='fam-table-add'></span> Add Detail</a>"
+	                    },
 	                    "sep3": {type:"html", notSelectable:true,  childIcon:true, html: "<div class='divider'></div>"},
-	                    "Update Details": {type:"html", notSelectable:false, name: "UpdateDetail", icon: "update", childIcon:true, html: "<a><span class='fam-table-edit'></span> Update Details</a>"},
+	                    "Update Details": {
+	                    	type:"html", 
+	                    	notSelectable:false, 
+	                    	name: "UpdateDetail", 
+	                    	icon: "update", 
+	                    	childIcon:true, 
+	                    	html: "<a><span class='fam-table-edit'></span> Update Details</a>"
+	                    },
 	                    
 	                }
 	            };
@@ -98,75 +275,72 @@
 											"</li>"+
 											"<li><div class='divider'></li>");
 	}
-	
-	function showDetails(clonedElement, id) {
-		$("#details_container").data("buzId", id);
-		//Need to re-do this code..... looks dump
-		if($("#detailScroller").is(":visible") && $("#detailScroller").children().length > 0) {
-			$("#detailScroller").children().children().hide();
-			$("#detailScroller").children().html(clonedElement);
-			$("#detailScroller").children().children().effect("slide", {direction: "right"}, 200);
-		}
-		else {
-			$("#detailWrapper").show();
-			if($("#detailScroller").children().length == 0) {
-				$("#detailScroller").toggle("slide", {direction: "right"}, 100,function(){
-					var details = $("<div class='details'>").append(clonedElement);
-					$(this).html("");
-					$(this).append(details);
-					//$(this).css("display", "block");
-				});
-			}
-			else {
-				$("#detailScroller").children().children().hide();
-				$("#detailScroller").children().html(clonedElement);
-				$("#detailScroller").children().children().effect("slide", {direction: "right"}, 200, function(){
-					$("#detailScroller").css("display", "block");
-				});
-			}
-			
-			
-		}
-		
-		$("#details_container").css("height", $("#detailWrapper").height() - $("#detailNav").height() + "px");
-		//
-		setTimeout(function(){
-			detailScroll = new iScroll("details_container");
-			//detailScroll.refresh();
-		}, 200);
-	}
 	function getOpenHour() {
-		var monday = $("#monday_time").val();
-		var tuesday = $("#tuesday_time").val();
-		var wednesday = $("#wednesday_time").val();
-		var thursday = $("#thursday_time").val();
-		var friday = $("#friday_time").val();
-		var saturday = $("#saturday_time").val();
-		var sunday = $("#sunday_time").val();
+		var openHours = [];
+		var monday = $("#input-monday").val();
+		var tuesday = $("#input-tuesday").val();
+		var wednesday = $("#input-wednesday").val();
+		var thursday = $("#input-thursday").val();
+		var friday = $("#input-friday").val();
+		var saturday = $("#input-saturday").val();
+		var sunday = $("#input-sunday").val();
 		
-		if(!$("#monday").is(":checked")) {
-			monday = null;
+		if($("#chk-monday").is(":checked")) {
+			openHours.push(monday);
 		}
-		if(!$("#tuesday").is(":checked")) {
-			tuesday = null;
+		if($("#chk-tuesday").is(":checked")) {
+			openHours.push(tuesday);
 		}
-		if(!$("#wednesday").is(":checked")) {
-			wednesday = null;
+		if($("#chk-wednesday").is(":checked")) {
+			openHours.push(wednesday);
 		}
-		if(!$("#thursday").is(":checked")) {
-			thursday = null;
+		if($("#chk-thursday").is(":checked")) {
+			openHours.push(thursday);
 		}
-		if(!$("#friday").is(":checked")) {
-			friday = null;
+		if($("#chk-friday").is(":checked")) {
+			openHours.push(friday);
 		}
-		if(!$("#saturday").is(":checked")) {
-			saturday = null;
+		if($("#chk-saturday").is(":checked")) {
+			openHours.push(saturday);
 		}
-		if(!$("#sunday").is(":checked")) {
-			sunday = null;
+		if($("#chk-sunday").is(":checked")) {
+			openHours.push(sunday);
 		}
 		
-		var openHours = [monday, tuesday, wednesday, thursday, friday, saturday, sunday];
-		return openHours;
+		return openHours.length > 0? openHours : null;
+	}
+	
+	function getInfoContent() {
+		var content = tinyMCE.get('more-info').getContent();//$("#more-info").text();
+		return content;
+	}
+	
+	function getImageUrl() {
+		return null;
+	}
+	function getPaymentOption() {
+		var payment = [];
+		$("#payment-accepted input[type='checkbox']:checked").each(function(){
+			payment.push($(this).data("payment"));
+		});
+		return payment.length > 0? payment : null;
+	}
+	function getSpecialities() {
+		return $("#specialities").val().split(",").length > 0 ? $("#specialities").val().split(",") : null;
+	}
+	function getServices() {
+		return $("#services").val().split(",").length > 0 ? $("#services").val().split(",") : null; 
+	}
+	function saveDetail() {
+		var data = {
+			"ajaxImgUrls": getImageUrl(),
+			"ajaxPayment": getPaymentOption(),
+			"ajaxOpenHours": getOpenHour(),
+			"businessId": Number(selectedId),
+			"info": getInfoContent(),
+			"ajaxSpecialities": getSpecialities(),
+			"ajaxServices": getServices()
+		};
+		businessObj.addDetail(data, function(detail){});
 	}
 </script>
