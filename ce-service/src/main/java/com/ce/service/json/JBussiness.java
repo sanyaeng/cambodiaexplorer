@@ -22,6 +22,22 @@ public class JBussiness {
     private JBussinessCategory         category;
     private List<JCommunicationOption> comOption;
     private List<OpenHours>            openHours;
+    private JBusinessDetails           businessDetail;
+
+    /**
+     * @return the businessDetail
+     */
+    public JBusinessDetails getBusinessDetail() {
+        return businessDetail;
+    }
+
+    /**
+     * @param businessDetail
+     *            the businessDetail to set
+     */
+    public void setBusinessDetail(JBusinessDetails businessDetail) {
+        this.businessDetail = businessDetail;
+    }
 
     /**
      * @return the businessId

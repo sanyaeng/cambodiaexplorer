@@ -20,7 +20,12 @@
 			</div>
 		</div>
 		<div>
-			<div class="addPhotoLink" style="">Upload Business Photo</div>
+			<div class="addPhotoLink" style="height:60px;">
+				<form id="upload_photo" action="" method="POST" enctype="multipart/form-data" style="width:94%;cursor:pointer;position:absolute;top:14px;">
+					<span style="margin-left:10px;">Upload Business Photo</span>
+					<input type="file" name="businessphoto" id="businessphoto" multiple="multiple">
+				</form>
+			</div>
 		</div>
 		<div class="divider horiziontal-divider"></div>
 		<div>
@@ -207,6 +212,10 @@
 	        selector: '.context-menu', 
 	        contextMenuCustomClass: 'dropdown-menu',
 	        build: function($trigger, e) {
+	        	var enableAddDetail;
+	        	businessObj.getDetail(selectedId, function(detail){
+	        		
+	        	});
 	            // this callback is executed every time the menu is to be shown
 	            // its results are destroyed every time the menu is hidden
 	            // e is the original contextmenu event, containing e.pageX and e.pageY (amongst other data)
@@ -241,7 +250,7 @@
 	                    	name: "AddDetail", 
 	                    	icon: "details", 
 	                    	childIcon:true, 
-	                    	html: "<a data-toggle='modal' href='#addDetailModal'><span class='fam-table-add'></span> Add Detail</a>"
+	                    	html: "<a data-toggle='modal' href='#addDetailModal' id='add-detail' class='mute'><span class='fam-table-add'></span> Add Detail</a>"
 	                    },
 	                    "sep3": {type:"html", notSelectable:true,  childIcon:true, html: "<div class='divider'></div>"},
 	                    "Update Details": {

@@ -94,8 +94,11 @@ public class BusinessDetailsController {
         return new ResponseEntity<List<JBusinessDetails>>(jDetails, HttpStatus.OK);
     }
 
-    private JBusinessDetails convert(BusinessDetails details) {
-        JBusinessDetails businessDetails = new JBusinessDetails();
+    public static JBusinessDetails convert(BusinessDetails details) {
+        JBusinessDetails businessDetails = new JBusinessDetails(details.getId(), details.getBusinessId(), details.getInfo(),
+                details.getPaymentAccepted(), details.getImageUrls(), details.getOpenHours(), details.getSpecialities(),
+                details.getServices());
+
         return businessDetails;
     }
 }

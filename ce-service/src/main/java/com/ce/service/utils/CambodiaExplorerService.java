@@ -10,6 +10,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ce.service.dao.BusinessCategoryDao;
+import com.ce.service.dao.BusinessDao;
+import com.ce.service.dao.BusinessDetailsDao;
 import com.ce.service.domain.BusinessCategory;
 import com.ce.service.json.JBussinessCategory;
 
@@ -21,6 +23,12 @@ public class CambodiaExplorerService {
 
     @Autowired
     private BusinessCategoryDao businessCategoryDao;
+
+    @Autowired
+    private BusinessDao         businessDao;
+
+    @Autowired
+    private BusinessDetailsDao  businessDetailDao;
 
     /**
      * Save the new category

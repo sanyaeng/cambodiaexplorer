@@ -13,6 +13,11 @@ public class JBlob {
 
     private String accessUrl;
 
+    public JBlob(String blobKey, String accessUrl) {
+        this.blobKey = blobKey;
+        this.accessUrl = accessUrl;
+    }
+
     /**
      * @return the blobKey
      */

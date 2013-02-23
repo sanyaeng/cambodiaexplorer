@@ -5,14 +5,24 @@
 			that.detailUrl = "http://" + location.host + "/businessDetail/api/v10";
 		};
 		BusinessDetail.prototype = {
-			getDetail: function(businessId, success, fail){
+			getDetail: function(businessId, successCallback, failCallback){
 				var that = this;
+				$.get(that.detailUrl + "/detail?businessId="+businessId, function(data, textStatus, jqXHR){
+					if(typeof successCallback === 'function') {
+						successCallback(data);
+					}
+				}).fail(function(){
+					if(typeof failCallback === 'function') {
+						failCallback();
+					}
+				});
+				/*
 				$.ajax({
 					url: that.detailUrl + "/detail?businessId="+businessId,
 					type: "GET",
 					dataType: "json",
 					success: function(detail){
-						if(typeof callBack === 'function') {
+					if(typeof callBack === 'function') {
 							success(detail);
 						}
 					},
@@ -21,7 +31,7 @@
 							fail(jqXHR.status);
 						}
 					}
-				});
+				});*/
 			},
 			addDetail: function(detail, success, fail) {
 				var that = this;

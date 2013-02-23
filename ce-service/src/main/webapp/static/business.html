@@ -135,11 +135,35 @@ function loadNewBusinessPage(businessItem) {
  * Load the listing page
  */
 function loadListing(listing) {
+	
 	$("#navWrapper").load("listing.html", function(){
+		var uploadUrl = "";
+		$.ajax({
+			url: "http://"+location.host + "/blob/api/upload",
+			type: "GET",
+			dataType: "json",
+			accept: "*",
+			success: function(jUpload) {
+				uploadUrl = jUpload.uploadUrl.replace("GGPP", "localhost"); 
+				$('#upload_photo').attr("action", uploadUrl);
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+			}
+		});
+		$('#upload_photo').iframePostForm({
+			json : true,
+			complete : function (response){
+				console.log("sss");
+				console.log(response);
+				//$('#logoImageUrl').val(response.accessUrl);
+			}
+		});
+		document.getElementById("businessphoto").addEventListener("change", function(){
+			console.log($('#upload_photo').attr("action"));
+			$('#upload_photo').submit();
+		}, false);
 		//load complete start here
-		setTimeout(function() {
-			arrangeBusinessListing(listing);
-		}, 200);
+		arrangeBusinessListing(listing);
 		manageEditor();
 	});
 }

@@ -1,9 +1,10 @@
 package com.ce.service.web;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,8 +23,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ce.service.dao.BusinessCategoryDao;
 import com.ce.service.dao.BusinessDao;
+import com.ce.service.dao.BusinessDetailsDao;
 import com.ce.service.domain.Business;
 import com.ce.service.domain.BusinessCategory;
+import com.ce.service.domain.BusinessDetails;
+import com.ce.service.json.JBusinessDetails;
 import com.ce.service.json.JBussiness;
 import com.ce.service.json.JBussinessCategory;
 import com.ce.service.model.OpenHours;
@@ -44,6 +47,9 @@ public class BusinessController {// extends GeneratedBusinessController {
 
     @Autowired
     BusinessCategoryDao     busCatDao;
+
+    @Autowired
+    BusinessDetailsDao      businessDetailDao;
 
     @Autowired
     CambodiaExplorerService cambodiaExplorerService;
@@ -70,7 +76,8 @@ public class BusinessController {// extends GeneratedBusinessController {
     public ResponseEntity<List<JBussiness>> getAllBusinesses(HttpServletRequest req, HttpServletResponse res, Principal principal) {
 
         Iterable<Business> businesses = this.businessDao.queryByUsername(principal.getName());
-        return new ResponseEntity<List<JBussiness>>(this.convert(businesses), HttpStatus.OK);
+        Iterable<BusinessDetails> businessDetail = this.businessDetailDao.queryAll();
+        return new ResponseEntity<List<JBussiness>>(this.convert(businesses, businessDetail), HttpStatus.OK);
     }
 
     @RequestMapping(value = "api/v10/getUserBusiness", method = RequestMethod.GET)
@@ -99,7 +106,7 @@ public class BusinessController {// extends GeneratedBusinessController {
      * @param businesses
      * @return
      */
-    private List<JBussiness> convert(Iterable<Business> businesses) {
+    private List<JBussiness> convert(Iterable<Business> businesses, Iterable<BusinessDetails> businessDetail) {
         List<JBussiness> buzes = new ArrayList<JBussiness>();
         for(Business business : businesses) {
             JBussiness jBusiness = new JBussiness();
@@ -109,9 +116,14 @@ public class BusinessController {// extends GeneratedBusinessController {
             jBusiness.setBusinessLat(business.getLattitue());
             jBusiness.setBusinessLon(business.getLongitute());
             jBusiness.setBusinessShortDescription(business.getBusinessDescription());
-            // jBusiness.setOpenHours(this.getOpeningHours(business.getOpenHours()));
             BusinessCategory cat = busCatDao.findByPrimaryKey(business.getBusinessCategoryId());
             jBusiness.setCategory(this.convert(cat));
+            for(BusinessDetails detail : businessDetail) {
+                if (business.getId() == detail.getBusinessId()) {
+                    jBusiness.setBusinessDetail(BusinessDetailsController.convert(detail));
+                    break;
+                }
+            }
             buzes.add(jBusiness);
         }
         return buzes;

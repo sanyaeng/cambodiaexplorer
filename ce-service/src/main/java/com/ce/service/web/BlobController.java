@@ -4,6 +4,7 @@
 package com.ce.service.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,23 +53,17 @@ public class BlobController {
     }
 
     @RequestMapping(value = "upload", method = RequestMethod.POST)
-    public ResponseEntity<JBlob> upload(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<List<JBlob>> upload(HttpServletRequest request, HttpServletResponse response) {
         final Map<String, List<BlobKey>> blobMap = blobService.getUploads(request);
-        final JBlob blob = new JBlob();
-        if (1 == blobMap.size()) {
-            for(List<BlobKey> keys : blobMap.values()) {
-                if (1 == keys.size()) {
-
-                    blob.setBlobKey(keys.get(0).getKeyString());
-                    blob.setAccessUrl(String.format("%s://%s/blob/api/upload?key=%s", request.getScheme(),
-                            request.getHeader("Host"), blob.getBlobKey()));
-                }
+        final List<JBlob> jblob = new ArrayList<JBlob>();
+        for(List<BlobKey> keys : blobMap.values()) {
+            for(BlobKey blobKey : keys) {
+                JBlob blob = new JBlob(blobKey.getKeyString(), String.format("%s://%s/blob/api/upload?key=%s",
+                        request.getScheme(), request.getHeader("Host"), blobKey.getKeyString()));
+                jblob.add(blob);
             }
         }
-        else {
-            return new ResponseEntity<JBlob>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<JBlob>(blob, HttpStatus.OK);
+        return new ResponseEntity<List<JBlob>>(jblob, HttpStatus.OK);
     }
 
 }
