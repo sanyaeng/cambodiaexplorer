@@ -41,7 +41,7 @@ var scrollContent,
 var detailLoaded = false;
     
 document.body.addEventListener("click", function(e) {
-	if("detailscontainer" != e.target.className && e.target.className != "moredetails" && (e.target.className != "details" && "moredetails" != e.target.parentNode.className) && "update" != e.target.parentNode.id && "businessview" != e.target.parentNode.className && "listing_parent" != e.target.parentNode.className) {
+	if("detail-container" != e.target.className && e.target.className != "moredetails" && (e.target.className != "details" && "moredetails" != e.target.parentNode.className) && "update" != e.target.parentNode.id && "businessview" != e.target.parentNode.className && "listing_parent" != e.target.parentNode.className) {
 		detailLoaded = false;
 		gmap.hideBubble();
 	}
@@ -205,6 +205,7 @@ function pushDetailBlock() {
 	$("#details_container").css("height", $("#detailWrapper").height() - $("#detailNav").height() + "px");
 	detailLoaded = true;
 }
+
 function refreshMapPosition(p) {
 	currentLat = p.coords.latitude;
 	currentLon = p.coords.longitude;
@@ -215,7 +216,14 @@ function refreshMapPosition(p) {
 }
 
 function failRefreshMap() {
-	var newLocation = new Location(currentLat, currentLon);
-	gmap.refresh(newLocation);
+	//var newLocation = new Location(currentLat, currentLon);
+	gmap.refresh(defaultLocation);
+	
+	google.maps.event.addListener(gmap.map, 'click', function(event) {
+		gmap.placeMarker(event.latLng, false, 'images/flag'+trim($("#businesstype option:selected").text()).toLowerCase()+'.png', function(clickedLocation){
+			$("#lat").val(clickedLocation.lat());
+			$("#lon").val(clickedLocation.lng());
+		});
+	});
 }
 </script>

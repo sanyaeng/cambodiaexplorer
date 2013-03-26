@@ -337,12 +337,130 @@ div.horiziontal-divider {
 }
 
 .addPhotoLink #businessphoto {
-	font-size: 113px;
-    height: 61px;
-    left: -1780px;
-    margin-left: 15px;
-    opacity: 0;
-    position: relative;
-    top: 0;
-    width: 325px;
+	font-size: 85px;
+	height: 61px;
+	opacity: 0;
+	position: relative;
+	top: -21px;
+}
+.modal-body .uploading-container {
+	height: 126px;
+	border: 1px solid #e5e5e5;
+	box-shadow: 1px 1px 11px inset;
+	border-radius: 5px;
+	display: none;
+}
+
+.uploading-container .photo-thumnail-container {
+	white-space: nowrap;
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+.photo-thumnail-container .photo-upload-thumnail {
+	height: 100px;
+	border: 1px solid #e5e5e5;
+	width: 100px;
+	float: left;
+	margin-right: 10px;
+}
+
+.addPhotoLink form {
+	width: 100%;
+	cursor: pointer;
+	position: relative;
+	height: 96%;
+}
+.modal-body {
+	overflow-x: hidden;
+}
+.detail-container {
+	position: absolute;
+	bottom: 0;
+	height: 100px;
+	border-radius: 5px;
+	/*box-shadow: 3px -4px 22px #000;*/
+	border-top-right-radius: 0;
+}
+.detail-container:after {
+	content: '';
+	background: #000;
+	opacity: 0.6;
+	position: absolute;
+	bottom: 0;
+	height: 100px;
+	border-radius: 5px;
+	width: 100%;
+	border-top-right-radius: 0;
+	height:100%;
+}
+
+.detail-container .detail {
+	background: #fff;
+	min-height: 60px;
+	width: 98%;
+	margin: 10px;
+	border-radius: 5px;
+	position:relative;
+	box-shadow: 2px 2px 2px inset;
+	z-index:2000;
+}
+
+.detail-container .more-detail-link {
+	width: 130px;
+	height: 40px;
+	position: relative;
+	top: -40px;
+	float: right;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	cursor: pointer;
+}
+
+.detail-container .more-detail-link:after {
+	content:'';
+	width: 130px;
+	height: 40px;
+	background: #000;
+	position: absolute;
+	top: 0px;
+	float: right;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	opacity: 0.6;
+	left:0;
+}
+
+.detail-container .more-detail-link .arrow {
+	margin: 10px 5px;
+	background: url("img/arrow.png") 43% 33% no-repeat;
+	height: 20px;
+	float: right;
+	width: 20px;
+	z-index: 20001;
+	position: relative;
+	border: 1px solid rgb(162, 156, 156);
+	border-radius: 50%;
+	-webkit-transform: rotate(-90deg);
+}
+.detail-container .more-detail-link .text {
+	float: left;
+	position: relative;
+	margin: 11px 9px;
+	font-size: 14px;
+	color: rgb(92, 88, 88);
+	text-shadow: -1px 1px 0px #fff;
+}
+.detail-container .title {
+	height: 70px;
+}
+
+.detail-container #info,
+.detail-container #specialities,
+.detail-container #services,
+.detail-container #paymentaccepted {
+	padding:10px;
+}
+.detail-container .headline {
+	color: #005499;
 }

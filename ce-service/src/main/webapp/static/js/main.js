@@ -14,7 +14,7 @@ function updFailed(p) {
 		alert(messages.timeoutText);
 	}
 	abortGeo = true;
-	new GMap("newbusiness", defaultLocation, false);
+	gmap = new GMap("newbusiness", defaultLocation, false);
 }
 
 /**

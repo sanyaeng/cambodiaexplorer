@@ -20,8 +20,15 @@
 			</div>
 		</div>
 		<div>
+			<div class="uploading-container">
+				<div style="margin: 10px 6px;overflow: auto;height: 121px;">
+					<div id="photo-thumbnail-container" class="photo-thumnail-container">
+						<!-- <div class="photo-upload-thumnail"></div> -->
+					</div>
+				</div>
+			</div>
 			<div class="addPhotoLink" style="height:60px;">
-				<form id="upload_photo" action="" method="POST" enctype="multipart/form-data" style="width:94%;cursor:pointer;position:absolute;top:14px;">
+				<form id="upload_photo" action="" method="POST" enctype="multipart/form-data">
 					<span style="margin-left:10px;">Upload Business Photo</span>
 					<input type="file" name="businessphoto" id="businessphoto" multiple="multiple">
 				</form>
@@ -157,6 +164,12 @@
 		gmap.placeAllMarkers(locationList);
 	}
 	function arrangeBusinessListing(jBusinessList) {
+		//bind event listener to the file input
+		document.getElementById("businessphoto").addEventListener("change", function(){
+			$(".uploading-container").show();
+			handleFileSelect();
+			$("#businessphoto").hide();
+		}, false);
 		//create the popover for the other payment 
 		
 		$.map(jBusinessList, function(jBusiness, i){
@@ -183,11 +196,50 @@
 		
 		$(".listing_parent").live("click", function(){
 			var clone = $(this).children().clone();
-			gmap.showBubble($(this).attr("rel"));
+			gmap.showBubble($(this).data("id"));
+			showDetails($(this).data("id"), clone);
 		});
 		$("#user-business-nav-list li:last").remove();//remove the last divider from dropdown business
 		buildContextMenu();
 	}
+	
+	function showDetails(id, clonedListing) {
+		$("<div id='detail-container' class='detail-container' style='width:"+$("#map").width()+"px;'>"+
+			"<div class='more-detail-link' onclick='getDetails("+id+");'>"+
+				"<div class='text'>More Details</div>"+
+				"<div class='arrow'></div>"+
+			"</div>"+
+			"<div class='detail title' id='title'></div>"+
+		"</div>").appendTo(".span7");
+		$("#title").append(clonedListing);
+	}
+	
+	function getDetails(businessId) {
+		$("#detail-container").animate({"height": "94%","top":"100px"}, 400);
+		businessObj.getDetail(businessId, function(detail){
+			$("#detail-container").append("<div class='detail info'><div id='info'><div class='headline'>Information</div><div>"+detail[0].info+"</div></div></div>");
+			if(detail[0].paymentAccepted.length > 0) {
+				$("#detail-container").append("<div class='detail payment-accepted'><div id='paymentaccepted'><div class='headline'>Payment Accepted</div></div></div>");
+			}
+			$.each(detail[0].paymentAccepted, function(i, p) {
+				$("#paymentaccepted").append("<div>"+p+"</div>");
+			});
+			if(detail[0].services.length > 0) {
+				$("#detail-container").append("<div class='detail services'><div id='services'><div class='headline'>Services</div></div></div>");
+			}
+			$.each(detail[0].services, function(i, s) {
+				$("#services").append("<div>"+s+"</div>");
+			});
+			if(detail[0].specialities.length > 0) {
+				$("#detail-container").append("<div class='detail specialities'><div id='specialities'><div class='headline'>Specialities</div></div></div>");
+			}
+			$.each(detail[0].specialities, function(i, sp) {
+				$("#specialities").append("<div>"+sp+"</div>");
+			});
+			console.log(detail);
+		});
+	}
+	
 	function handleContextMenuAction(actionKey, id) {
 		switch (actionKey) {
 			case "Delete":
@@ -340,6 +392,7 @@
 	function getServices() {
 		return $("#services").val().split(",").length > 0 ? $("#services").val().split(",") : null; 
 	}
+	
 	function saveDetail() {
 		var data = {
 			"ajaxImgUrls": getImageUrl(),

@@ -94,7 +94,9 @@
 				//open the clicked one
 				infoWindow.open(that.map, marker);
 			});
-		}
+		},
+		this.init();
+		
 	};
 	
 	//
@@ -138,6 +140,7 @@
 		showBubble: function(i) {
 			var that = this;
 			var bubble = that.bubbles.getItem(i);
+			console.log(that.bubbles);
 			var marker = that.markers.getItem(i);
 			this.hideBubble();
 			bubble.open(that.map, marker);
@@ -146,6 +149,7 @@
 		 * place the marker depends on the user clicked
 		 */
 		placeMarker: function(clickedLocation, isUserLocation, icon, callback) {
+			console.log("xx");
 			var that = this;
 			this.hideBubble();
 			if(isUserLocation) {
@@ -205,23 +209,28 @@
 		},
 		refresh: function(currentLocation) {
 			var that = this;
-			this.hideBubble();
-			//clear bubbles
-			that.bubbles.removeAll();
-			//clear markers
-			that._clearAllMarkers();
-			var newOption = {
-				center: new google.maps.LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-				zoom: 15,
-				mapTypeId: google.maps.MapTypeId.ROADMAP
+			if(that.map != null) {
+				this.hideBubble();
+				//clear bubbles
+				that.bubbles.removeAll();
+				//clear markers
+				that._clearAllMarkers();
+				var newOption = {
+						center: new google.maps.LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+						zoom: 15,
+						mapTypeId: google.maps.MapTypeId.ROADMAP
+				}
+				that.map.setOptions(newOption);
+				that.currentLocMarker = new google.maps.Marker({
+					position: new google.maps.LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+					map: that.map,
+					icon: "images/userPin.png",
+					title: "Your current location"
+				}); 
 			}
-			that.map.setOptions(newOption);
-			that.currentLocMarker = new google.maps.Marker({
-				position: new google.maps.LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-				map: that.map,
-				icon: "images/userPin.png",
-				title: "Your current location"
-			}); 
+			else {
+				this.init();
+			}
 		}
 	};
 	if (typeof exports !== 'undefined') exports.GMap = GMap;
